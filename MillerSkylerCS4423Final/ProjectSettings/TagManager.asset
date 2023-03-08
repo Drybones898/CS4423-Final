@@ -5,11 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - MovePlate
+  - SelectedPlate
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Background
   - Water
   - UI
   - 

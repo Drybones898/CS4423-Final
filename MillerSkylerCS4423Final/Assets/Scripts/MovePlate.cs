@@ -45,7 +45,7 @@ public class MovePlate : MonoBehaviour
 
         gameController.GetComponent<GameController>().NextTurn();
 
-        reference.GetComponent<PieceController>().DestroyMovePlates();
+        reference.GetComponent<PieceController>().DestroyPlates();
     }
 
     public void SetCoords(int x, int y) {

@@ -14,6 +14,8 @@ public class GameController : MonoBehaviour
     public TMP_Text pieceNameText;
     public TMP_Text pieceDescriptionText;
 
+    public TMP_Text test;
+
     private GameObject[,] positions = new GameObject[8,8];
     private GameObject[] playerBlack = new GameObject[20];
     private GameObject[] playerWhite = new GameObject[20];
@@ -33,15 +35,19 @@ public class GameController : MonoBehaviour
         };
         playerBlack = new GameObject[] {
             Create("blackRook", 0, 7), Create("blackKnight", 1, 7), Create("blackBishop", 2, 7), Create("blackQueen", 3, 7), Create("blackKing", 4, 7), 
-            Create("blackBishop", 5, 7), Create("blackKnight", 6, 7), Create("blackRook", 7, 7), Create("blackPawn", 0, 6), Create("blackPawn", 1, 6),
+            /*Create("blackBishop", 5, 7), Create("blackKnight", 6, 7), Create("blackRook", 7, 7), Create("blackPawn", 0, 6), Create("blackPawn", 1, 6),
             Create("blackPawn", 2, 6), Create("blackPawn", 3, 6), Create("blackPawn", 4, 6), Create("blackPawn", 5, 6), Create("blackPawn", 6, 6),
-            Create("blackPawn", 7, 6), Create("blackPrince", 5, 5)
+            Create("blackPawn", 7, 6), Create("blackPrince", 5, 5)*/
         };
 
         for (int i = 0; i < playerWhite.Length; i++) {
             SetPosition(playerWhite[i]);
-            SetPosition(playerBlack[i]);
         }
+        for (int i = 0; i < playerBlack.Length; i++) {
+            SetPosition(playerBlack[i]);
+            
+        }
+
     }
 
     public GameObject Create(string name, int x, int y) {
@@ -56,7 +62,6 @@ public class GameController : MonoBehaviour
 
     public void SetPosition(GameObject obj) {
         PieceController cm = obj.GetComponent<PieceController>();
-
         positions[cm.GetXBoard(), cm.GetYBoard()] = obj;
     }
 
@@ -95,10 +100,16 @@ public class GameController : MonoBehaviour
     public void NextTurn() {
         if (currentPlayer == "white") {
             currentPlayer = "black";
+            test.text = "black";
             MiniMaxAI mmai = MiniMaxAI.GetComponent<MiniMaxAI>();
+            test.text = "We did the best move calc";
+            if (positions == null) {
+                test.text = "epic fail";
+            }
             Vector2Int bestMove = mmai.GetBestMove(positions);
         } else {
             currentPlayer = "white";
+            test.text = "white";
         }
     }
 

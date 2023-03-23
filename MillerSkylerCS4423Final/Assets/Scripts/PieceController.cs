@@ -75,10 +75,10 @@ public class PieceController : MonoBehaviour
     }
 
     private void OnMouseUp() {
+        // only goes if right player. last part == player for 2players, "white" for ai game
         
-        if (!gameController.GetComponent<GameController>().IsGameOver() && gameController.GetComponent<GameController>().GetCurrentPlayer() == player) {
+        if (!gameController.GetComponent<GameController>().IsGameOver() && gameController.GetComponent<GameController>().GetCurrentPlayer() == "white") {
             DestroyPlates();
-
             SetPieceText();
             InitiateMovePlates();
             InitiateSelectedPlate(xBoard, yBoard);
@@ -154,7 +154,7 @@ public class PieceController : MonoBehaviour
     public void InitiateMovePlates() {
         switch (this.name) {
             case "whiteQueen":
-            case "blackQueen":
+            //case "blackQueen":
                 LineMovePlate(1, 0);
                 LineMovePlate(0, 1);
                 LineMovePlate(1, 1);
@@ -165,22 +165,22 @@ public class PieceController : MonoBehaviour
                 LineMovePlate(1, -1);
                 break;
             case "whiteKnight":
-            case "blackKnight":
+            //case "blackKnight":
                 LMovePlate();
                 break;
             case "whiteBishop":
-            case "blackBishop":
+            //case "blackBishop":
                 LineMovePlate(1, 1);
                 LineMovePlate(1, -1);
                 LineMovePlate(-1, 1);
                 LineMovePlate(-1, -1);
                 break;
             case "whiteKing":
-            case "blackKing":
+            //case "blackKing":
                 AdjacentMovePlate();
                 break;
             case "whiteRook":
-            case "blackRook":
+            //case "blackRook":
                 LineMovePlate(1, 0);
                 LineMovePlate(0, 1);
                 LineMovePlate(-1, 0);
@@ -189,11 +189,11 @@ public class PieceController : MonoBehaviour
             case "whitePawn":
                 PawnMovePlate(xBoard, yBoard + 1);
                 break;
-            case "blackPawn":
-                PawnMovePlate(xBoard, yBoard - 1);
-                break;
+            //case "blackPawn":
+                //PawnMovePlate(xBoard, yBoard - 1);
+                //break;
             case "whitePrince":
-            case "blackPrince":
+            //case "blackPrince":
                 LimitedLineMovePlate(1, 0, 2, 2, 2, 2);
                 LimitedLineMovePlate(0, 1, 2, 2, 2, 2);
                 LimitedLineMovePlate(1, 1, 2, 2, 2, 2);
@@ -366,7 +366,7 @@ public class PieceController : MonoBehaviour
         
         // Check if the move is within the board bounds
         PieceController chessPiece = piece.GetComponent<PieceController>();
-        if (!(x <= 8 && x >= 0 && y <= 8 && y >= 0))
+        if (!(x <= 7 && x >= 0 && y <= 7 && y >= 0))
         {
             return false;
         }
@@ -544,7 +544,7 @@ public class PieceController : MonoBehaviour
         int xInc = 1;
         int yInc = 1;
 
-        while (x <= 8 && x >= 0 && y <= 8 && y >= 0 && board[x, y] == null) {
+        while (x <= 7 && x >= 0 && y <= 7 && y >= 0 && board[x, y] == null) {
             //MovePlateSpawn(x, y, false);
             moves.Add(x,y);
             x += xInc;
@@ -570,7 +570,7 @@ public class PieceController : MonoBehaviour
                     xInc = i;
                     yInc = j;
 
-                    while (x <= 8 && x >= 0 && y <= 8 && y >= 0 && board[x, y] == null) {
+                    while (x <= 7 && x >= 0 && y <= 7 && y >= 0 && board[x, y] == null) {
                         //MovePlateSpawn(x, y, false);
                         move.Set(x,y);
                         moves.Add(move);
@@ -578,7 +578,7 @@ public class PieceController : MonoBehaviour
                         y += yInc;
                     }
 
-                    if (x <= 8 && x >= 0 && y <= 8 && y >= 0) {
+                    if (x <= 7 && x >= 0 && y <= 7 && y >= 0) {
                         GameObject pieceAtPlace = board[x, y];
                         PieceController chessPieceAtPlace = piece.GetComponent<PieceController>();
                         if (chessPieceAtPlace.GetComponent<PieceController>().player != chessPiece.GetComponent<PieceController>().player) {
@@ -608,7 +608,7 @@ public class PieceController : MonoBehaviour
         int xInc = 1;
         int yInc = 1;
 
-        while (x <= 8 && x >= 0 && y <= 8 && y >= 0 && board[x, y] == null) {
+        while (x <= 7 && x >= 0 && y <= 7 && y >= 0 && board[x, y] == null) {
             //MovePlateSpawn(x, y, false);
             moves.Add(x,y);
             x += xInc;
@@ -634,7 +634,7 @@ public class PieceController : MonoBehaviour
                     xInc = i;
                     yInc = j;
 
-                    while (x <= 8 && x >= 0 && y <= 8 && y >= 0 && board[x, y] == null) {
+                    while (x <= 7 && x >= 0 && y <= 7 && y >= 0 && board[x, y] == null) {
                         //MovePlateSpawn(x, y, false);
                         move.Set(x,y);
                         moves.Add(move);
@@ -642,7 +642,7 @@ public class PieceController : MonoBehaviour
                         y += yInc;
                     }
 
-                    if (x <= 8 && x >= 0 && y <= 8 && y >= 0) {
+                    if (x <= 7 && x >= 0 && y <= 7 && y >= 0) {
                         GameObject pieceAtPlace = board[x, y];
                         PieceController chessPieceAtPlace = piece.GetComponent<PieceController>();
                         if (chessPieceAtPlace.GetComponent<PieceController>().player != chessPiece.GetComponent<PieceController>().player) {
@@ -664,7 +664,7 @@ public class PieceController : MonoBehaviour
 
         //GameController sc = gameController.GetComponent<GameController>();
             //determines if position is real. Then assigns the piece, or lack of piece, at that position to an object
-            if (x <= 8 && x >= 0 && y <= 8 && y >= 0) {
+            if (x <= 7 && x >= 0 && y <= 7 && y >= 0) {
                 GameObject cp = board[x, y];
                 PieceController chessPieceAtPlace = piece.GetComponent<PieceController>();
 
@@ -687,7 +687,7 @@ public class PieceController : MonoBehaviour
         PieceController chessPiece = piece.GetComponent<PieceController>();
 
         //GameController sc = gameController.GetComponent<GameController>();
-        if (x <= 8 && x >= 0 && y <= 8 && y >= 0) {
+        if (x <= 7 && x >= 0 && y <= 7 && y >= 0) {
             if (board[x, y] == null) {
                 if (board[x, chessPiece.GetYBoard()] == board[x, 1] && chessPiece.GetComponent<PieceController>().player == "white" && board[x, y + 1] == null) {
                         //MovePlateSpawn(x, y + 1, false);
@@ -708,7 +708,7 @@ public class PieceController : MonoBehaviour
             if (x > 1 && x < 7 && y > 1 && y < 7) {
                 GameObject pieceAtPlace = board[x + 1, y];
                 PieceController chessPieceAtPlace = piece.GetComponent<PieceController>();
-                if (x + 1 <= 8 && x + 1 >= 0 && y <= 8 && y >= 0 && board[x + 1, y] != null && chessPieceAtPlace.GetComponent<PieceController>().player != chessPiece.GetComponent<PieceController>().player) {
+                if (x + 1 <= 7 && x + 1 >= 0 && y <= 7 && y >= 0 && board[x + 1, y] != null && chessPieceAtPlace.GetComponent<PieceController>().player != chessPiece.GetComponent<PieceController>().player) {
                     //MovePlateSpawn(x + 1, y, true);
                     move.Set(x,y);
                     moves.Add(move);
@@ -723,7 +723,7 @@ public class PieceController : MonoBehaviour
             if (x > 1 && x < 7 && y > 1 && y < 7) {
                 GameObject pieceAtPlace = board[x - 1, y];
                 PieceController chessPieceAtPlace = piece.GetComponent<PieceController>();
-                if (x - 1 <= 8 && x - 1 >= 0 && y <= 8 && y >= 0 && board[x - 1, y] != null && chessPieceAtPlace.GetComponent<PieceController>().player != chessPiece.GetComponent<PieceController>().player) {
+                if (x - 1 <= 7 && x - 1 >= 0 && y <= 7 && y >= 0 && board[x - 1, y] != null && chessPieceAtPlace.GetComponent<PieceController>().player != chessPiece.GetComponent<PieceController>().player) {
                     //MovePlateSpawn(x - 1, y, true);
                     move.Set(x,y);
                     moves.Add(move);
@@ -752,7 +752,7 @@ public class PieceController : MonoBehaviour
         int x = fakeXBoard + xInc;
         int y = fakeYBoard + yInc;
 
-        while (x <= 8 && x >= 0 && y <= 8 && y >= 0 && board[x, y] == null) {
+        while (x <= 7 && x >= 0 && y <= 7 && y >= 0 && board[x, y] == null) {
             if ((x - fakeXBoard) <= xDisPositve && (y - fakeYBoard) <= yDisPositve && (fakeXBoard - x) <= xDisNegative && (fakeYBoard - y) <= yDisNegative) {
                 //MovePlateSpawn(x, y, false);
                 move.Set(x,y);
@@ -765,9 +765,12 @@ public class PieceController : MonoBehaviour
             }  
         }
 
-        GameObject pieceAtPlace = board[x, y];
+        x = fakeXBoard + xInc;
+        y = fakeYBoard + yInc;
+
+        GameObject pieceAtPlace = board[fakeXBoard, fakeYBoard];
         PieceController chessPieceAtPlace = piece.GetComponent<PieceController>();
-        if (x <= 8 && x >= 0 && y <= 8 && y >= 0 && chessPieceAtPlace.GetComponent<PieceController>().player != chessPiece.GetComponent<PieceController>().player) {
+        if (x <= 7 && x >= 0 && y <= 7 && y >= 0 && chessPieceAtPlace.GetComponent<PieceController>().player != chessPiece.GetComponent<PieceController>().player) {
             //MovePlateSpawn(x, y, true);
             move.Set(x,y);
             moves.Add(move);

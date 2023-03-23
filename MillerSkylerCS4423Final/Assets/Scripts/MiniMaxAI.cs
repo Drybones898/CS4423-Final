@@ -11,11 +11,17 @@ public class MiniMaxAI : MonoBehaviour
 {
 
     public GameObject gameController;
+
+    public GameObject movePlate;
     public int maxDepth = 3;
+
+    public void Activate() {
+        gameController = GameObject.FindGameObjectWithTag("GameController");
+    }
 
     public int Minimax(GameObject[,] board, int depth, int alpha, int beta, bool maximizingPlayer)
     {
-        if (depth == 0 || IsTerminalNode(board))
+        if (depth == 0 /*|| IsTerminalNode(board)*/)
         {
             return Evaluate(board);
         }
@@ -70,11 +76,12 @@ public class MiniMaxAI : MonoBehaviour
     {
         int bestEval = int.MinValue;
         Vector2Int bestMove = Vector2Int.zero;
-        GameObject chessPiece = null;
+        GameObject chessPiece = board[0,0];
 
         foreach (GameObject piece in GetPieces(board, "white"))
         {
             List<Vector2Int> moves = GetPossibleMoves(piece, board);
+            
             foreach (Vector2Int move in moves)
             {
                 GameObject[,] newBoard = MakeMove(piece, move, board);
@@ -83,12 +90,16 @@ public class MiniMaxAI : MonoBehaviour
                 {
                     bestEval = eval;
                     bestMove = move;
-                    chessPiece = piece;
                 }
             }
         }
 
-        MakeMove(chessPiece, bestMove, board);
+        GameObject MovePlate = Instantiate(movePlate, new Vector2(200, 200), Quaternion.identity);
+        MovePlate MovePlateScript = MovePlate.GetComponent<MovePlate>();
+        MovePlateScript.SetReference(gameObject);
+        MovePlateScript.SetCoords(bestMove.x, bestMove.y);
+
+        board = MakeRealMove(chessPiece, bestMove, board);
 
         return bestMove;
     }
@@ -257,11 +268,71 @@ private List<Vector2Int> GetPossibleMoves(GameObject piece, GameObject[,] board)
     {
         // Make a copy of the current board with the given move applied
         PieceController chessPiece = piece.GetComponent<PieceController>();
+        GameObject simulatedGameController = Instantiate(gameController);
+        GameController simGC = simulatedGameController.GetComponent<GameController>();
+
+        
+        GameObject MovePlate = Instantiate(movePlate, new Vector2(200, 200), Quaternion.identity);
+        MovePlate MovePlateScript = MovePlate.GetComponent<MovePlate>();
+        MovePlateScript.SetReference(piece);
+        MovePlateScript.Move(simulatedGameController, move.x, move.y);
+        
+        /*
+        int i, j;
+        for (i = 0; i < 8; i++)
+        {
+            for (j = 0; j < 8; j++)
+            {
+                simGC.SetPosition(board[i,j]);
+            }
+        }
         GameController gc = gameController.GetComponent<GameController>();
+        simGC.SetPositionEmpty(chessPiece.GetXBoard(), chessPiece.GetYBoard());
+        chessPiece.SetXBoard(move.x);
+        chessPiece.SetYBoard(move.y);
+        chessPiece.SetCoords();
+        simGC.SetPosition(piece);
+        for (i = 0; i < 8; i++)
+        {
+            for (j = 0; j < 8; j++)
+            {
+                board[i,j] = simGC.GetPosition(i,j);
+            }
+        }
+        simGC.NextTurn();
+        */
+        return board;
+    }
+
+    private GameObject[,] MakeRealMove(GameObject piece, Vector2Int move, GameObject[,] board)
+    {
+        // Make a copy of the current board with the given move applied
+        PieceController chessPiece = piece.GetComponent<PieceController>();
+        GameController gc = gameController.GetComponent<GameController>();
+
+
+        GameObject MovePlate = Instantiate(movePlate, new Vector2(200, 200), Quaternion.identity);
+        MovePlate MovePlateScript = MovePlate.GetComponent<MovePlate>();
+        MovePlateScript.SetReference(piece);
+        MovePlateScript.Move(gameController, move.x, move.y);
+
+        /*
+        int i, j;
+        for (i = 0; i < 8; i++)
+        {
+            for (j = 0; j < 8; j++)
+            {
+                gc.SetPosition(board[i,j]);
+            }
+        }
+        
         gc.SetPositionEmpty(chessPiece.GetXBoard(), chessPiece.GetYBoard());
         chessPiece.SetXBoard(move.x);
         chessPiece.SetYBoard(move.y);
-        gc.SetPosition(gameObject);
+        chessPiece.SetCoords();
+        gc.SetPosition(piece);
+        gc.NextTurn();
+        */
         return board;
     }
 }

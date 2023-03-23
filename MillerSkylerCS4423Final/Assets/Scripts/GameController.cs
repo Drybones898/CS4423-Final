@@ -9,6 +9,7 @@ public class GameController : MonoBehaviour
 {
     
     public GameObject Chesspiece;
+    public GameObject MiniMaxAI;
 
     public TMP_Text pieceNameText;
     public TMP_Text pieceDescriptionText;
@@ -94,6 +95,8 @@ public class GameController : MonoBehaviour
     public void NextTurn() {
         if (currentPlayer == "white") {
             currentPlayer = "black";
+            MiniMaxAI mmai = MiniMaxAI.GetComponent<MiniMaxAI>();
+            Vector2Int bestMove = mmai.GetBestMove(positions);
         } else {
             currentPlayer = "white";
         }

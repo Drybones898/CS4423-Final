@@ -1,13 +1,16 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 /***************************EVERYTHING HERE IS AI GENERATED STUFF****************************/
+/*****************MAJOR CHANGES MADE TO THIS CODE ANYWAYS. YOU KNOW HOW AI IS****************/
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MinimaxAI : MonoBehaviour
+public class MiniMaxAI : MonoBehaviour
 {
+
+    public GameObject gameController;
     public int maxDepth = 3;
 
     public int Minimax(GameObject[,] board, int depth, int alpha, int beta, bool maximizingPlayer)
@@ -67,6 +70,7 @@ public class MinimaxAI : MonoBehaviour
     {
         int bestEval = int.MinValue;
         Vector2Int bestMove = Vector2Int.zero;
+        GameObject chessPiece = null;
 
         foreach (GameObject piece in GetPieces(board, "white"))
         {
@@ -79,9 +83,12 @@ public class MinimaxAI : MonoBehaviour
                 {
                     bestEval = eval;
                     bestMove = move;
+                    chessPiece = piece;
                 }
             }
         }
+
+        MakeMove(chessPiece, bestMove, board);
 
         return bestMove;
     }
@@ -98,13 +105,14 @@ private bool IsTerminalNode(GameObject[,] board)
         for (int j = 0; j < 8; j++)
         {
             GameObject piece = board[i, j];
+            PieceController chessPiece = piece.GetComponent<PieceController>();
             if (piece != null)
             {
-                if (piece.name("whiteKing"))
+                if (chessPiece.name == "whiteKing")
                 {
                     blackWin = true;
                 }
-                else if (piece.name("blackKing"))
+                else if (chessPiece.name == "blackKing")
                 {
                     whiteWin = true;
                 }
@@ -144,28 +152,66 @@ private bool IsTerminalNode(GameObject[,] board)
 private int Evaluate(GameObject[,] board)
 {
     // Simple evaluation function: count the number of pieces
-    int whiteCount = 0;
-    int blackCount = 0;
+    int whiteValue = 0;
+    int blackValue = 0;
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
         {
             GameObject piece = board[i, j];
+            PieceController chessPiece = piece.GetComponent<PieceController>();
             if (piece != null)
             {
-                if (piece.GetColor() == "white")
-                {
-                    whiteCount++;
+                switch (chessPiece.GetName()) {
+                    case "whiteQueen":
+                        whiteValue = whiteValue + 9;
+                        break;
+                    case "blackQueen":
+                        blackValue = blackValue + 9;
+                        break;
+                    case "whiteKnight":
+                        whiteValue = whiteValue + 3;
+                        break;
+                    case "blackKnight":
+                        blackValue = blackValue + 3;
+                        break;
+                    case "whiteBishop":
+                        whiteValue = whiteValue + 3;
+                        break;
+                    case "blackBishop":
+                        blackValue = blackValue + 3;
+                        break;
+                    case "whiteKing":
+                        whiteValue = whiteValue + 1000;
+                        break;
+                    case "blackKing":
+                        blackValue = blackValue + 1000;
+                        break;
+                    case "whiteRook":
+                        whiteValue = whiteValue + 5;
+                        break;
+                    case "blackRook":
+                        blackValue = blackValue + 5;
+                        break;
+                    case "whitePawn":
+                        whiteValue = whiteValue + 1;
+                        break;
+                    case "blackPawn":
+                        blackValue = blackValue + 1;
+                        break;
+                    case "whitePrince":
+                        whiteValue = whiteValue + 7;
+                        break;
+                    case "blackPrince":
+                        blackValue = blackValue + 7;
+                        break;
                 }
-                else if (piece.GetColor() == "black")
-                {
-                    blackCount++;
-                }
+
             }
         }
     }
 
-    return whiteCount - blackCount;
+    return whiteValue - blackValue;
 }
 
 // Return a list of all pieces of the given color
@@ -177,9 +223,12 @@ private List<GameObject> GetPieces(GameObject[,] board, string color)
         for (int j = 0; j < 8; j++)
         {
             GameObject piece = board[i, j];
-            if (piece != null && piece.GetColor() == color)
-            {
-                pieces.Add(piece);
+            if (piece != null) {
+                PieceController chessPiece = piece.GetComponent<PieceController>();
+                if (chessPiece != null && chessPiece.GetPlayer() == color)
+                {
+                        pieces.Add(piece);
+                }
             }
         }
     }
@@ -207,6 +256,13 @@ private List<Vector2Int> GetPossibleMoves(GameObject piece, GameObject[,] board)
     private GameObject[,] MakeMove(GameObject piece, Vector2Int move, GameObject[,] board)
     {
         // Make a copy of the current board with the given move applied
+        PieceController chessPiece = piece.GetComponent<PieceController>();
+        GameController gc = gameController.GetComponent<GameController>();
+        gc.SetPositionEmpty(chessPiece.GetXBoard(), chessPiece.GetYBoard());
+        chessPiece.SetXBoard(move.x);
+        chessPiece.SetYBoard(move.y);
+        gc.SetPosition(gameObject);
+        return board;
     }
 }
 

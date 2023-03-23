@@ -57,8 +57,12 @@ public class PieceController : MonoBehaviour
     public int GetYBoard() {
         return yBoard;
     }
-    
-    public string GetColor() {
+
+    public string GetName() {
+        return this.name;
+    }
+
+    public string GetPlayer() {
         return player;
     }
 
@@ -361,6 +365,7 @@ public class PieceController : MonoBehaviour
         //GameController gameController = GameObject.Find("GameController").GetComponent<GameController>();
         
         // Check if the move is within the board bounds
+        PieceController chessPiece = piece.GetComponent<PieceController>();
         if (!(x <= 8 && x >= 0 && y <= 8 && y >= 0))
         {
             return false;
@@ -368,7 +373,8 @@ public class PieceController : MonoBehaviour
         
         // Check if there is a piece of the same color in the target position
         GameObject targetPiece = board[x, y];
-        if (targetPiece != null && targetPiece.GetComponent<PieceController>().GetColor() == piece.GetComponent<PieceController>().GetColor())
+        PieceController targetChessPiece = piece.GetComponent<PieceController>();
+        if (targetPiece != null && targetChessPiece.GetComponent<PieceController>().player == chessPiece.GetComponent<PieceController>().player)
         {
             return false;
         }
@@ -377,14 +383,15 @@ public class PieceController : MonoBehaviour
         List<Vector2Int> possibleMoves = GetMoves(board, piece);
         foreach (Vector2Int move in possibleMoves)
         {
-            int targetX = piece.GetXBoard() + move.x;
-            int targetY = piece.GetYBoard(); + move.y;
+            int targetX = chessPiece.GetXBoard() + move.x;
+            int targetY = chessPiece.GetYBoard() + move.y;
             
             if (targetX == x && targetY == y)
             {
                 GameObject simulatedGameController = Instantiate(gameController);
-                simulatedGameController.SetPositionEmpty(xBoard, yBoard);
-                simulatedGameController.SetPosition(gameObject);
+                GameController sgc = simulatedGameController.GetComponent<GameController>();
+                sgc.SetPositionEmpty(xBoard, yBoard);
+                sgc.SetPosition(gameObject);
                 Destroy(simulatedGameController.gameObject);
                 return true;
             }
@@ -400,13 +407,14 @@ public class PieceController : MonoBehaviour
         int currentY = GetYBoard();
 
         // Move the piece to the new position
-        gameController.SetPositionEmpty(currentX, currentY);
+        GameController gc = gameController.GetComponent<GameController>();
+        gc.SetPositionEmpty(currentX, currentY);
         SetXBoard(move.x);
         SetYBoard(move.y);
-        gameController.SetPosition(gameObject);
+        gc.SetPosition(gameObject);
 
         // Update the game state
-        gameController.NextTurn();
+        gc.NextTurn();
     }
 
 
@@ -419,8 +427,9 @@ public class PieceController : MonoBehaviour
 
     public List<Vector2Int> GetMoves(GameObject[,] board, GameObject piece) {
         List<Vector2Int> moves = new List<Vector2Int>();
+        PieceController chessPiece = piece.GetComponent<PieceController>();
 
-        switch (piece.name) {
+        switch (chessPiece.name) {
             case "whiteQueen":
             case "blackQueen":
                 moves.AddRange(GetBishopMoves(board, piece));
@@ -443,10 +452,10 @@ public class PieceController : MonoBehaviour
                 moves.AddRange(GetRookMoves(board, piece));
                 break;
             case "whitePawn":
-                moves.AddRange(GetPawnMoves(board, piece, piece.GetComponent<PieceController>().GetXBoard(), piece.GetComponent<PieceController>().GetYBoard() + 1));
+                moves.AddRange(GetPawnMoves(board, piece, chessPiece.GetXBoard(), chessPiece.GetYBoard() + 1));
                 break;
             case "blackPawn":
-                moves.AddRange(GetPawnMoves(board, piece, piece.GetComponent<PieceController>().GetXBoard(), piece.GetComponent<PieceController>().GetYBoard() - 1));
+                moves.AddRange(GetPawnMoves(board, piece, chessPiece.GetXBoard(), chessPiece.GetYBoard() - 1));
                 break;
             case "whitePrince":
             case "blackPrince":
@@ -460,60 +469,64 @@ public class PieceController : MonoBehaviour
                 moves.AddRange(GetLimitedLineMoves(board, piece, 1, -1, 2, 2, 2, 2));
                 break;
         }
+        return moves;
     }
 
     public List<Vector2Int> GetLMoves(GameObject[,] board, GameObject piece) {
         List<Vector2Int> moves = new List<Vector2Int>();
-        moves.Add(GetPointMoves(piece.xBoard - 1, piece.GetComponent<PieceController>().GetYBoard() + 2));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 1, piece.GetComponent<PieceController>().GetYBoard() + 2));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 2, piece.GetComponent<PieceController>().GetYBoard() + 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 2, piece.GetComponent<PieceController>().GetYBoard() - 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 1, piece.GetComponent<PieceController>().GetYBoard() - 2));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() - 1, piece.GetComponent<PieceController>().GetYBoard() - 2));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() - 2, piece.GetComponent<PieceController>().GetYBoard() + 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() - 2, piece.GetComponent<PieceController>().GetYBoard() - 1));
+        PieceController chessPiece = piece.GetComponent<PieceController>();
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() - 1, chessPiece.GetYBoard() + 2));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() + 1, chessPiece.GetYBoard() + 2));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() + 2, chessPiece.GetYBoard() + 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() + 2, chessPiece.GetYBoard() - 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() + 1, chessPiece.GetYBoard() - 2));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() - 1, chessPiece.GetYBoard() - 2));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() - 2, chessPiece.GetYBoard() + 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() - 2, chessPiece.GetYBoard() - 1));
         return moves;
     }
 
     public List<Vector2Int> GetAdjacentMoves(GameObject[,] board, GameObject piece) {
         List<Vector2Int> moves = new List<Vector2Int>();
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard(), piece.GetComponent<PieceController>().GetYBoard() - 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard(), piece.GetComponent<PieceController>().GetYBoard() + 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() - 1, piece.GetComponent<PieceController>().GetYBoard() - 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() - 1, piece.GetComponent<PieceController>().GetYBoard()));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() - 1, piece.GetComponent<PieceController>().GetYBoard() + 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 1, piece.GetComponent<PieceController>().GetYBoard() - 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 1, piece.GetComponent<PieceController>().GetYBoard()));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 1, piece.GetComponent<PieceController>().GetYBoard() + 1));
+        PieceController chessPiece = piece.GetComponent<PieceController>();
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard(), chessPiece.GetYBoard() - 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard(), chessPiece.GetYBoard() + 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() -1, chessPiece.GetYBoard() - 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() -1, chessPiece.GetYBoard()));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() -1, chessPiece.GetYBoard() + 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() +1, chessPiece.GetYBoard() - 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() +1, chessPiece.GetYBoard()));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() + 1, chessPiece.GetYBoard() + 1));
         return moves;
     }
 
     public List<Vector2Int> DoubleAdjacentMovePlate(GameObject[,] board, GameObject piece) {
         List<Vector2Int> moves = new List<Vector2Int>();
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard(), piece.GetComponent<PieceController>().GetYBoard() + 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard(), piece.GetComponent<PieceController>().GetYBoard() - 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() - 1, piece.GetComponent<PieceController>().GetYBoard() - 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() - 1, piece.GetComponent<PieceController>().GetYBoard()));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() - 1, piece.GetComponent<PieceController>().GetYBoard() + 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 1, piece.GetComponent<PieceController>().GetYBoard() - 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 1, piece.GetComponent<PieceController>().GetYBoard()));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 1, piece.GetComponent<PieceController>().GetYBoard() + 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard(), piece.GetComponent<PieceController>().GetYBoard() + 2));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard(), piece.GetComponent<PieceController>().GetYBoard() - 2));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() - 2, piece.GetComponent<PieceController>().GetYBoard() - 2));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() - 2, piece.GetComponent<PieceController>().GetYBoard()));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() - 2, piece.GetComponent<PieceController>().GetYBoard() + 2));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 2, piece.GetComponent<PieceController>().GetYBoard() - 2));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 2, piece.GetComponent<PieceController>().GetYBoard()));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 2, piece.GetComponent<PieceController>().GetYBoard() + 2));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 1, piece.GetComponent<PieceController>().GetYBoard() + 2));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() - 1, piece.GetComponent<PieceController>().GetYBoard() + 2));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 2, piece.GetComponent<PieceController>().GetYBoard() + 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 2, piece.GetComponent<PieceController>().GetYBoard() - 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() + 1, piece.GetComponent<PieceController>().GetYBoard() - 2));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() - 1, piece.GetComponent<PieceController>().GetYBoard() - 2));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() - 2, piece.GetComponent<PieceController>().GetYBoard() + 1));
-        moves.Add(GetPointMoves(piece.GetComponent<PieceController>().GetXBoard() - 2, piece.GetComponent<PieceController>().GetYBoard() - 1));
+        PieceController chessPiece = piece.GetComponent<PieceController>();
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard(), chessPiece.GetYBoard() - 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard(), chessPiece.GetYBoard() + 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() - 1, chessPiece.GetYBoard() - 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() - 1, chessPiece.GetYBoard() + 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() - 1, chessPiece.GetYBoard()));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() + 1, chessPiece.GetYBoard() - 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() + 1, chessPiece.GetYBoard()));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() + 1, chessPiece.GetYBoard() + 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard(), chessPiece.GetYBoard() + 2));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard(), chessPiece.GetYBoard() - 2));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() - 2, chessPiece.GetYBoard() - 2));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() - 2, chessPiece.GetYBoard()));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() - 2, chessPiece.GetYBoard() + 2));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() + 2, chessPiece.GetYBoard() - 2));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() + 2, chessPiece.GetYBoard()));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() + 2, chessPiece.GetYBoard() + 2));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() + 1, chessPiece.GetYBoard() + 2));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() - 1, chessPiece.GetYBoard() + 2));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() + 2, chessPiece.GetYBoard() + 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() + 2, chessPiece.GetYBoard() - 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() + 1, chessPiece.GetYBoard() - 2));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() - 1, chessPiece.GetYBoard() - 2));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() - 2, chessPiece.GetYBoard() + 1));
+        moves.AddRange(GetPointMoves(board, piece, chessPiece.GetXBoard() - 2, chessPiece.GetYBoard() - 1));
         return moves;
     }
 
@@ -524,9 +537,9 @@ public class PieceController : MonoBehaviour
 
         int xInc, yInc;
 
-        
-        int x = piece.GetComponent<PieceController>().GetXBoard();
-        int y = piece.GetComponent<PieceController>().GetYBoard();
+        PieceController chessPiece = piece.GetComponent<PieceController>();
+        int x = chessPiece.GetXBoard();
+        int y = chessPiece.GetYBoard();
         /*
         int xInc = 1;
         int yInc = 1;
@@ -551,8 +564,8 @@ public class PieceController : MonoBehaviour
                 // Verifies that it is only up, down, left, or right
                 if (Mathf.Abs(x) + Mathf.Abs(y) == 1) {
 
-                    x = piece.GetComponent<PieceController>().GetXBoard();
-                    y = piece.GetComponent<PieceController>().GetYBoard();
+                    x = chessPiece.GetXBoard();
+                    y = chessPiece.GetYBoard();
 
                     xInc = i;
                     yInc = j;
@@ -567,7 +580,8 @@ public class PieceController : MonoBehaviour
 
                     if (x <= 8 && x >= 0 && y <= 8 && y >= 0) {
                         GameObject pieceAtPlace = board[x, y];
-                        if (pieceAtPlace.GetComponent<PieceController>().player != piece.GetComponent<PieceController>().player) {
+                        PieceController chessPieceAtPlace = piece.GetComponent<PieceController>();
+                        if (chessPieceAtPlace.GetComponent<PieceController>().player != chessPiece.GetComponent<PieceController>().player) {
                         //MovePlateSpawn(x, y, true);
                         move.Set(x,y);
                         moves.Add(move);
@@ -586,9 +600,9 @@ public class PieceController : MonoBehaviour
 
         int xInc, yInc;
 
-        
-        int x = piece.GetComponent<PieceController>().GetXBoard();
-        int y = piece.GetComponent<PieceController>().GetYBoard();
+        PieceController chessPiece = piece.GetComponent<PieceController>();
+        int x = chessPiece.GetXBoard();
+        int y = chessPiece.GetYBoard();
 
         /*
         int xInc = 1;
@@ -614,8 +628,8 @@ public class PieceController : MonoBehaviour
                 // Verifies that it is only the diagonals
                 if (Mathf.Abs(x) + Mathf.Abs(y) == 2) {
 
-                    x = piece.GetComponent<PieceController>().GetXBoard();
-                    y = piece.GetComponent<PieceController>().GetYBoard();
+                    x = chessPiece.GetXBoard();
+                    y = chessPiece.GetYBoard();
 
                     xInc = i;
                     yInc = j;
@@ -630,7 +644,8 @@ public class PieceController : MonoBehaviour
 
                     if (x <= 8 && x >= 0 && y <= 8 && y >= 0) {
                         GameObject pieceAtPlace = board[x, y];
-                        if (pieceAtPlace.GetComponent<PieceController>().player != piece.GetComponent<PieceController>().player) {
+                        PieceController chessPieceAtPlace = piece.GetComponent<PieceController>();
+                        if (chessPieceAtPlace.GetComponent<PieceController>().player != chessPiece.GetComponent<PieceController>().player) {
                         //MovePlateSpawn(x, y, true);
                         move.Set(x,y);
                         moves.Add(move);
@@ -645,17 +660,19 @@ public class PieceController : MonoBehaviour
     public List<Vector2Int> GetPointMoves(GameObject[,] board, GameObject piece, int x, int y) {
         List<Vector2Int> moves = new List<Vector2Int>();
         Vector2Int move = new Vector2Int();
+        PieceController chessPiece = piece.GetComponent<PieceController>();
 
         //GameController sc = gameController.GetComponent<GameController>();
             //determines if position is real. Then assigns the piece, or lack of piece, at that position to an object
             if (x <= 8 && x >= 0 && y <= 8 && y >= 0) {
                 GameObject cp = board[x, y];
+                PieceController chessPieceAtPlace = piece.GetComponent<PieceController>();
 
             if (cp == null) {
                 //MovePlateSpawn(x, y, false);
                 move.Set(x,y);
                 moves.Add(move);
-                } else if (cp.GetComponent<PieceController>().player != piece.GetComponent<PieceController>().player) {
+                } else if (chessPieceAtPlace.GetComponent<PieceController>().player != chessPiece.GetComponent<PieceController>().player) {
                     //MovePlateSpawn(x, y, true);
                     move.Set(x,y);
                     moves.Add(move);
@@ -667,16 +684,17 @@ public class PieceController : MonoBehaviour
     public List<Vector2Int> GetPawnMoves(GameObject[,] board, GameObject piece, int x, int y) {
         List<Vector2Int> moves = new List<Vector2Int>();
         Vector2Int move = new Vector2Int();
+        PieceController chessPiece = piece.GetComponent<PieceController>();
 
         //GameController sc = gameController.GetComponent<GameController>();
         if (x <= 8 && x >= 0 && y <= 8 && y >= 0) {
             if (board[x, y] == null) {
-                if (board[x, yBoard] == board[x, 1] && player == "white" && board[x, y + 1] == null) {
+                if (board[x, chessPiece.GetYBoard()] == board[x, 1] && chessPiece.GetComponent<PieceController>().player == "white" && board[x, y + 1] == null) {
                         //MovePlateSpawn(x, y + 1, false);
                         move.Set(x,y);
                         moves.Add(move);
                     }
-                if (board[x, yBoard] == board[x, 6] && player == "black" && board[x, y - 1] == null) {
+                if (board[x, chessPiece.GetYBoard()] == board[x, 6] && chessPiece.GetComponent<PieceController>().player == "black" && board[x, y - 1] == null) {
                         //MovePlateSpawn(x, y - 1, false);
                         move.Set(x,y);
                         moves.Add(move);
@@ -686,19 +704,35 @@ public class PieceController : MonoBehaviour
                 moves.Add(move);
             }
 
-            gameObject pieceAtPlace = board[x + 1, y];
-            if (x + 1 <= 8 && x + 1 >= 0 && y <= 8 && y >= 0 && board[x + 1, y] != null && pieceAtPlace.GetComponent<PieceController>().player != piece.GetComponent<PieceController>().player) {
-                //MovePlateSpawn(x + 1, y, true);
-                move.Set(x,y);
-                moves.Add(move);
+            
+            if (x > 1 && x < 7 && y > 1 && y < 7) {
+                GameObject pieceAtPlace = board[x + 1, y];
+                PieceController chessPieceAtPlace = piece.GetComponent<PieceController>();
+                if (x + 1 <= 8 && x + 1 >= 0 && y <= 8 && y >= 0 && board[x + 1, y] != null && chessPieceAtPlace.GetComponent<PieceController>().player != chessPiece.GetComponent<PieceController>().player) {
+                    //MovePlateSpawn(x + 1, y, true);
+                    move.Set(x,y);
+                    moves.Add(move);
+                }
+            } else {
+                GameObject pieceAtPlace = board[x, y];
+                PieceController chessPieceAtPlace = piece.GetComponent<PieceController>();
             }
+            
 
-            pieceAtPlace = board[x - 1, y];
-            if (x - 1 <= 8 && x - 1 >= 0 && y <= 8 && y >= 0 && board[x - 1, y] != null && pieceAtPlace.GetComponent<PieceController>().player != piece.GetComponent<PieceController>().player) {
-                //MovePlateSpawn(x - 1, y, true);
-                move.Set(x,y);
-                moves.Add(move);
+            
+            if (x > 1 && x < 7 && y > 1 && y < 7) {
+                GameObject pieceAtPlace = board[x - 1, y];
+                PieceController chessPieceAtPlace = piece.GetComponent<PieceController>();
+                if (x - 1 <= 8 && x - 1 >= 0 && y <= 8 && y >= 0 && board[x - 1, y] != null && chessPieceAtPlace.GetComponent<PieceController>().player != chessPiece.GetComponent<PieceController>().player) {
+                    //MovePlateSpawn(x - 1, y, true);
+                    move.Set(x,y);
+                    moves.Add(move);
+                }
+            } else {
+                GameObject pieceAtPlace = board[x, y];
+                PieceController chessPieceAtPlace = piece.GetComponent<PieceController>();
             }
+            
         }
         return moves;
     }
@@ -706,18 +740,19 @@ public class PieceController : MonoBehaviour
     public List<Vector2Int> GetLimitedLineMoves(GameObject[,] board, GameObject piece, int xInc, int yInc, int xDisPositve, int yDisPositve, int xDisNegative, int yDisNegative) {
         List<Vector2Int> moves = new List<Vector2Int>();
         Vector2Int move = new Vector2Int();
+        PieceController chessPiece = piece.GetComponent<PieceController>();
         
         //GameController sc = gameController.GetComponent<GameController>();
 
         //int x, y, xInc, yInc;
 
-        int fakeXBoard = piece.GetComponent<PieceController>().GetXBoard();
-        int fakeYBoard = piece.GetComponent<PieceController>().GetYBoard();
+        int fakeXBoard = chessPiece.GetXBoard();
+        int fakeYBoard = chessPiece.GetYBoard();
 
         int x = fakeXBoard + xInc;
         int y = fakeYBoard + yInc;
 
-        while (x <= 8 && x >= 0 && y <= 8 && y >= 0 && sboard[x, y] == null) {
+        while (x <= 8 && x >= 0 && y <= 8 && y >= 0 && board[x, y] == null) {
             if ((x - fakeXBoard) <= xDisPositve && (y - fakeYBoard) <= yDisPositve && (fakeXBoard - x) <= xDisNegative && (fakeYBoard - y) <= yDisNegative) {
                 //MovePlateSpawn(x, y, false);
                 move.Set(x,y);
@@ -731,7 +766,8 @@ public class PieceController : MonoBehaviour
         }
 
         GameObject pieceAtPlace = board[x, y];
-        if (x <= 8 && x >= 0 && y <= 8 && y >= 0 && pieceAtPlace.GetComponent<PieceController>().player != piece.GetComponent<PieceController>().player) {
+        PieceController chessPieceAtPlace = piece.GetComponent<PieceController>();
+        if (x <= 8 && x >= 0 && y <= 8 && y >= 0 && chessPieceAtPlace.GetComponent<PieceController>().player != chessPiece.GetComponent<PieceController>().player) {
             //MovePlateSpawn(x, y, true);
             move.Set(x,y);
             moves.Add(move);

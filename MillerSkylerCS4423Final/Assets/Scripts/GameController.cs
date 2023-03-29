@@ -35,7 +35,7 @@ public class GameController : MonoBehaviour
         };
         playerBlack = new GameObject[] {
             Create("blackRook", 0, 7), Create("blackKnight", 1, 7), Create("blackBishop", 2, 7), Create("blackQueen", 3, 7), Create("blackKing", 4, 7), 
-            /*Create("blackBishop", 5, 7), Create("blackKnight", 6, 7), Create("blackRook", 7, 7), Create("blackPawn", 0, 6), Create("blackPawn", 1, 6),
+            Create("blackBishop", 5, 7), /*Create("blackKnight", 6, 7), Create("blackRook", 7, 7), Create("blackPawn", 0, 6), Create("blackPawn", 1, 6),
             Create("blackPawn", 2, 6), Create("blackPawn", 3, 6), Create("blackPawn", 4, 6), Create("blackPawn", 5, 6), Create("blackPawn", 6, 6),
             Create("blackPawn", 7, 6), Create("blackPrince", 5, 5)*/
         };
@@ -103,9 +103,25 @@ public class GameController : MonoBehaviour
             test.text = "black";
             MiniMaxAI mmai = MiniMaxAI.GetComponent<MiniMaxAI>();
             test.text = "We did the best move calc";
-            if (positions == null) {
-                test.text = "epic fail";
+            /*
+            if (positions != null) {
+            Debug.Log("We have positions");
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    if (positions[i,j] != null) {
+                        Debug.Log(positions[i,j]);
+                        Debug.Log(i);
+                        Debug.Log(j);
+                    }
+                }
             }
+            Debug.Log(positions[7,7]);
+        } else {
+            Debug.Log("We don't have positions");
+        }
+        */
             Vector2Int bestMove = mmai.GetBestMove(positions);
         } else {
             currentPlayer = "white";

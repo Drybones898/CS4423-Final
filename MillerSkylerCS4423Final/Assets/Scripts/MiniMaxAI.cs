@@ -78,6 +78,22 @@ public class MiniMaxAI : MonoBehaviour
         Vector2Int bestMove = Vector2Int.zero;
         GameObject chessPiece = board[0,0];
 
+        if (board != null) {
+            Debug.Log("We have a board");
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    if (board[i,j] != null) {
+                        Debug.Log(board[i,j]);
+                    }
+                }
+            }
+            Debug.Log(board[7,7]);
+        } else {
+            Debug.Log("We don't have a board");
+        }
+
         foreach (GameObject piece in GetPieces(board, "white"))
         {
             List<Vector2Int> moves = GetPossibleMoves(piece, board);
@@ -90,15 +106,32 @@ public class MiniMaxAI : MonoBehaviour
                 {
                     bestEval = eval;
                     bestMove = move;
+                    chessPiece = piece;
                 }
             }
         }
 
-        GameObject MovePlate = Instantiate(movePlate, new Vector2(200, 200), Quaternion.identity);
-        MovePlate MovePlateScript = MovePlate.GetComponent<MovePlate>();
-        MovePlateScript.SetReference(gameObject);
-        MovePlateScript.SetCoords(bestMove.x, bestMove.y);
+        //GameObject MovePlate = Instantiate(movePlate, new Vector2(200, 200), Quaternion.identity);
+        //MovePlate MovePlateScript = MovePlate.GetComponent<MovePlate>();
+        //MovePlateScript.SetReference(chessPiece);
+       // MovePlateScript.SetCoords(bestMove.x, bestMove.y);
 
+            Debug.Log("We have a board 2");
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    if (board[i,j] != null) {
+                        Debug.Log(board[i,j]);
+                        Debug.Log(i);
+                        Debug.Log(j);
+                    } else {
+                        Debug.Log("null/no piece");
+                    }
+                }
+            }
+            Debug.Log(board[7,7]);
+        
         board = MakeRealMove(chessPiece, bestMove, board);
 
         return bestMove;
@@ -310,7 +343,8 @@ private List<Vector2Int> GetPossibleMoves(GameObject piece, GameObject[,] board)
         PieceController chessPiece = piece.GetComponent<PieceController>();
         GameController gc = gameController.GetComponent<GameController>();
 
-
+        //chessPiece.MakeMove(move , piece);
+        
         GameObject MovePlate = Instantiate(movePlate, new Vector2(200, 200), Quaternion.identity);
         MovePlate MovePlateScript = MovePlate.GetComponent<MovePlate>();
         MovePlateScript.SetReference(piece);

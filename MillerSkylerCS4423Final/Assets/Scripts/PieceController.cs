@@ -114,37 +114,37 @@ public class PieceController : MonoBehaviour
     public void SetPieceText()  {
         switch (this.name) {
             case "whiteQueen":
-            case "blackQueen":
+            //case "blackQueen":
                 gameController.GetComponent<GameController>().SetPieceNameText("Queen");
                 gameController.GetComponent<GameController>().SetPieceDescriptionText("It can move as many squares as it likes left or right horizontally, or as many squares as it likes up or down vertically. It cannot jump over pieces.");
                 break;
             case "whiteKnight":
-            case "blackKnight":
+            //case "blackKnight":
                 gameController.GetComponent<GameController>().SetPieceNameText("Knight");
                 gameController.GetComponent<GameController>().SetPieceDescriptionText("The knight moves one square left or right horizontally and then two squares up or down vertically, OR it moves two squares left or right horizontally and then one square up or down vertically. It can only capture on what it lands on, not what it jumps over.");
                 break;
             case "whiteBishop":
-            case "blackBishop":
+            //case "blackBishop":
                 gameController.GetComponent<GameController>().SetPieceNameText("Bishop");
                 gameController.GetComponent<GameController>().SetPieceDescriptionText("A bishop can move diagonally as many squares as it likes, as long as it is not blocked by its own pieces or an occupied square.");
                 break;
             case "whiteKing":
-            case "blackKing":
+            //case "blackKing":
                 gameController.GetComponent<GameController>().SetPieceNameText("King");
                 gameController.GetComponent<GameController>().SetPieceDescriptionText("The king can only move and capture in one square in any direction.");
                 break;
             case "whiteRook":
-            case "blackRook":
+            //case "blackRook":
                 gameController.GetComponent<GameController>().SetPieceNameText("Rook");
                 gameController.GetComponent<GameController>().SetPieceDescriptionText("The rook can move as many squares as it likes left or right horizontally, or as many squares as it likes up or down vertically (as long as it isn't blocked by other pieces).");
                 break;
             case "whitePawn":
-            case "blackPawn":
+            //case "blackPawn":
                 gameController.GetComponent<GameController>().SetPieceNameText("Pawn");
                 gameController.GetComponent<GameController>().SetPieceDescriptionText("If it is a pawn's first move, it can move forward one or two squares. If a pawn has already moved, then it can move forward just one square at a time. It attacks (or captures) each square diagonally to the left or right.");
                 break;
             case "whitePrince":
-            case "blackPrince":
+            //case "blackPrince":
                 gameController.GetComponent<GameController>().SetPieceNameText("Prince");
                 gameController.GetComponent<GameController>().SetPieceDescriptionText("The prince can move up to two spaces in the horizontal and vertical directions. It is unable to jump over pieces.");
                 break;
@@ -154,7 +154,7 @@ public class PieceController : MonoBehaviour
     public void InitiateMovePlates() {
         switch (this.name) {
             case "whiteQueen":
-            //case "blackQueen":
+            case "blackQueen":
                 LineMovePlate(1, 0);
                 LineMovePlate(0, 1);
                 LineMovePlate(1, 1);
@@ -165,22 +165,22 @@ public class PieceController : MonoBehaviour
                 LineMovePlate(1, -1);
                 break;
             case "whiteKnight":
-            //case "blackKnight":
+            case "blackKnight":
                 LMovePlate();
                 break;
             case "whiteBishop":
-            //case "blackBishop":
+            case "blackBishop":
                 LineMovePlate(1, 1);
                 LineMovePlate(1, -1);
                 LineMovePlate(-1, 1);
                 LineMovePlate(-1, -1);
                 break;
             case "whiteKing":
-            //case "blackKing":
+            case "blackKing":
                 AdjacentMovePlate();
                 break;
             case "whiteRook":
-            //case "blackRook":
+            case "blackRook":
                 LineMovePlate(1, 0);
                 LineMovePlate(0, 1);
                 LineMovePlate(-1, 0);
@@ -189,11 +189,11 @@ public class PieceController : MonoBehaviour
             case "whitePawn":
                 PawnMovePlate(xBoard, yBoard + 1);
                 break;
-            //case "blackPawn":
-                //PawnMovePlate(xBoard, yBoard - 1);
-                //break;
+            case "blackPawn":
+                PawnMovePlate(xBoard, yBoard - 1);
+                break;
             case "whitePrince":
-            //case "blackPrince":
+            case "blackPrince":
                 LimitedLineMovePlate(1, 0, 2, 2, 2, 2);
                 LimitedLineMovePlate(0, 1, 2, 2, 2, 2);
                 LimitedLineMovePlate(1, 1, 2, 2, 2, 2);
@@ -382,19 +382,20 @@ public class PieceController : MonoBehaviour
         // Check if the move is valid according to the specific piece's movement rules
         List<Vector2Int> possibleMoves = GetMoves(board, piece);
         foreach (Vector2Int move in possibleMoves)
-        {
-            int targetX = chessPiece.GetXBoard() + move.x;
-            int targetY = chessPiece.GetYBoard() + move.y;
+        {           
             
-            if (targetX == x && targetY == y)
+            if (x == move.x && y == move.y)
             {
+                /*
                 GameObject simulatedGameController = Instantiate(gameController);
                 GameController sgc = simulatedGameController.GetComponent<GameController>();
                 sgc.SetPositionEmpty(xBoard, yBoard);
                 sgc.SetPosition(gameObject);
                 Destroy(simulatedGameController.gameObject);
+                */
                 return true;
             }
+            
         }
         
         return false;

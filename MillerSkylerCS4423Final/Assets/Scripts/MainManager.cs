@@ -8,6 +8,7 @@ public class MainManager : MonoBehaviour
     public static MainManager instance;
     public int[] pieces;
     public string gameColor;
+
     // Start is called before the first frame update
     void Start()
     {

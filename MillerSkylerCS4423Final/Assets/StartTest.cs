@@ -20,7 +20,7 @@ public class StartTest : MonoBehaviour
     }
 
     public void OnMouseUp() {
-        mainManager.GetComponent<MainManager>().gameColor = "red";
+        //mainManager.GetComponent<MainManager>().gameColor = "red";
         SceneManager.LoadScene("Map");
     }
 }

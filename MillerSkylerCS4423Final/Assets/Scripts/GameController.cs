@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -31,6 +30,7 @@ public class GameController : MonoBehaviour
     private GameObject[,] positions = new GameObject[8,8];
     private GameObject[] playerBlack;// = new GameObject[2];
     private GameObject[] playerWhite;// = new GameObject[2];
+    private GameObject[] boardHazard;
 
     private string currentPlayer = "white";
 
@@ -43,7 +43,7 @@ public class GameController : MonoBehaviour
     int yStart;
     string color;
     string realName;
-    bool pauseActive = false;
+    public bool pauseActive = false;
     
     // Start is called before the first frame update
     void Start()
@@ -52,6 +52,7 @@ public class GameController : MonoBehaviour
         pieces = mainManager.GetComponent<MainManager>().pieces;
         int numWhite = mainManager.GetComponent<MainManager>().numWhite;
         int numBlack = mainManager.GetComponent<MainManager>().numBlack;
+        int numHazard = mainManager.GetComponent<MainManager>().numHazard;
 
         gameColorDropdown.onValueChanged.AddListener(delegate {
                 onValueChanged(gameColorDropdown);
@@ -64,11 +65,14 @@ public class GameController : MonoBehaviour
         
         playerWhite = new GameObject[numWhite];
         playerBlack = new GameObject[numBlack];
+        boardHazard = new GameObject[numHazard];
         
         int j = 0;
         int k = 0;
+        int l = 0;
         GameObject objectWhite;
         GameObject objectBlack;
+        GameObject objectHazard;
         
         for (int i = 0; i < pieces.Length; i++) {
             if (i == 0) {
@@ -94,6 +98,12 @@ public class GameController : MonoBehaviour
                     case 6:
                         pieceName = "Prince";
                         break;
+                    case 7:
+                        pieceName = "hole1";
+                        break;
+                    case 8:
+                        pieceName = "hole2";
+                        break;
                 }
             }
             if (i == 1) {
@@ -107,6 +117,8 @@ public class GameController : MonoBehaviour
                     color = "white";
                 } else if (pieces[i] == 1) {
                     color = "black";
+                } else {
+                    color = "hazard";
                 }
                 realName = string.Concat(color, pieceName);
                 if (color == "white") { 
@@ -117,6 +129,10 @@ public class GameController : MonoBehaviour
                     objectBlack = Create(realName, xStart, yStart); 
                     playerBlack[k] = objectBlack;
                     k++;
+                } else {
+                    objectHazard = Create(realName, xStart, yStart);
+                    boardHazard[l] = objectHazard;
+                    l++;
                 }
             }
             if (i != 0 && i != 1 && i != 2 && i != 3) {
@@ -144,6 +160,12 @@ public class GameController : MonoBehaviour
                         case 6:
                             pieceName = "Prince";
                             break;
+                        case 7:
+                            pieceName = "hole1";
+                            break;
+                        case 8:
+                            pieceName = "hole2";
+                            break;
                     }
                     break;
                     case 1:
@@ -155,8 +177,10 @@ public class GameController : MonoBehaviour
                     case 3:
                         if (pieces[i] == 0) {
                             color = "white";
-                        } else {
+                        } else if (pieces[i] == 1) {
                             color = "black";
+                        } else {
+                            color = "hazard";
                         }
                         realName = string.Concat(color, pieceName);
                         if (color == "white") {
@@ -167,6 +191,10 @@ public class GameController : MonoBehaviour
                             objectBlack = Create(realName, xStart, yStart); 
                             playerBlack[k] = objectBlack;
                             k++;
+                        } else {
+                            objectHazard = Create(realName, xStart, yStart);
+                            boardHazard[l] = objectHazard;
+                            l++;
                         }
                         break;
                     }            
@@ -178,6 +206,9 @@ public class GameController : MonoBehaviour
         }
         for (int i = 0; i < playerBlack.Length; i++) {
             SetPosition(playerBlack[i]);
+        }
+        for (int i = 0; i < boardHazard.Length; i++) {
+            SetPosition(boardHazard[i]);
         }
         
 
@@ -272,6 +303,7 @@ public class GameController : MonoBehaviour
     void resumeGame() {
         pauseMenu.SetActive(false);
         optionsMenu.SetActive(false);
+        pauseActive = !pauseActive;
     }
 
     public void onValueChanged(TMP_Dropdown change) {
@@ -309,7 +341,6 @@ public class GameController : MonoBehaviour
         {
             if (pauseActive) {
                 resumeGame();
-                pauseActive = !pauseActive;
             } else {
                 toPauseMenu();
                 pauseActive = !pauseActive;

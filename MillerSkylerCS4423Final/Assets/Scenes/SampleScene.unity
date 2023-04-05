@@ -1586,6 +1586,7 @@ MonoBehaviour:
   confirmButton: {fileID: 2087285877}
   quitButton: {fileID: 658959427}
   pieces: 
+  pauseActive: 0
 --- !u!4 &620160896
 Transform:
   m_ObjectHideFlags: 0

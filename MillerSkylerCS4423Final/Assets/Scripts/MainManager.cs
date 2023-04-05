@@ -10,6 +10,7 @@ public class MainManager : MonoBehaviour
     public string gameColor;
     public int numWhite;
     public int numBlack;
+    public int numHazard;
     public int numWins = 0;
     public int numLoss = 0;
     public int money = 0;

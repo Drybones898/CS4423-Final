@@ -16,6 +16,7 @@ public class PieceController : MonoBehaviour
 
     public Sprite blackQueen, blackKnight, blackBishop, blackKing, blackRook, blackPawn, blackPrince;
     public Sprite whiteQueen, whiteKnight, whiteBishop, whiteKing, whiteRook, whitePawn, whitePrince;
+    public Sprite hazardhole1, hazardhole2;
 
     public void Activate() {
         gameController = GameObject.FindGameObjectWithTag("GameController");
@@ -37,6 +38,8 @@ public class PieceController : MonoBehaviour
             case "whiteRook": this.GetComponent<SpriteRenderer>().sprite = whiteRook; player = "white"; break;
             case "whitePawn": this.GetComponent<SpriteRenderer>().sprite = whitePawn; player = "white"; break;
             case "whitePrince": this.GetComponent<SpriteRenderer>().sprite = whitePrince; player = "white"; break;
+            case "hazardhole1": this.GetComponent<SpriteRenderer>().sprite = hazardhole1; player = "hazard"; break;
+            case "hazardhole2": this.GetComponent<SpriteRenderer>().sprite = hazardhole2; player = "hazard"; break;
         }
     }
 
@@ -68,11 +71,17 @@ public class PieceController : MonoBehaviour
 
     private void OnMouseUp() {
         
-        if (!gameController.GetComponent<GameController>().IsGameOver() && gameController.GetComponent<GameController>().GetCurrentPlayer() == player) {
+        if (!gameController.GetComponent<GameController>().IsGameOver() && gameController.GetComponent<GameController>().GetCurrentPlayer() == player && gameController.GetComponent<GameController>().pauseActive == false) {
             DestroyPlates();
 
             SetPieceText();
             InitiateMovePlates();
+            InitiateSelectedPlate(xBoard, yBoard);
+        }
+        if (!gameController.GetComponent<GameController>().IsGameOver() && gameController.GetComponent<GameController>().GetCurrentPlayer() != player && gameController.GetComponent<GameController>().pauseActive == false) {
+            DestroyPlates();
+
+            SetPieceText();
             InitiateSelectedPlate(xBoard, yBoard);
         }
         
@@ -139,6 +148,11 @@ public class PieceController : MonoBehaviour
             case "blackPrince":
                 gameController.GetComponent<GameController>().SetPieceNameText("Prince");
                 gameController.GetComponent<GameController>().SetPieceDescriptionText("The prince can move up to two spaces in the horizontal and vertical directions. It is unable to jump over pieces.");
+                break;
+            case "hazardhole1":
+            case "hazardhole2":
+                gameController.GetComponent<GameController>().SetPieceNameText("Hole");
+                gameController.GetComponent<GameController>().SetPieceDescriptionText("This is a hole. You cannot move pieces here.");
                 break;
         }
     }
@@ -210,7 +224,7 @@ public class PieceController : MonoBehaviour
             y += yInc;
         }
 
-        if (sc.PositionsOnBoard(x, y) && sc.GetPosition(x, y).GetComponent<PieceController>().player != player) {
+        if (sc.PositionsOnBoard(x, y) && sc.GetPosition(x, y).GetComponent<PieceController>().player != player && sc.GetPosition(x, y).GetComponent<PieceController>().player != "hazard") {
             MovePlateSpawn(x, y, true);
         }
     }
@@ -233,7 +247,7 @@ public class PieceController : MonoBehaviour
             }  
         }
 
-        if (sc.PositionsOnBoard(x, y) && sc.GetPosition(x, y).GetComponent<PieceController>().player != player) {
+        if (sc.PositionsOnBoard(x, y) && sc.GetPosition(x, y).GetComponent<PieceController>().player != player && sc.GetPosition(x, y).GetComponent<PieceController>().player != "hazard") {
             //MovePlateSpawn(x, y, true);
             if ((x - xBoard) <= xDisPositve && (y - yBoard) <= yDisPositve && (xBoard - x) <= xDisNegative && (yBoard - y) <= yDisNegative) {
                 MovePlateSpawn(x, y, true);
@@ -297,7 +311,7 @@ public class PieceController : MonoBehaviour
 
             if (cp == null) {
             MovePlateSpawn(x, y, false);
-            } else if (cp.GetComponent<PieceController>().player != player) {
+            } else if (cp.GetComponent<PieceController>().player != player && cp.GetComponent<PieceController>().player != "hazard") {
                 MovePlateSpawn(x, y, true);
             }
         }  
@@ -316,11 +330,11 @@ public class PieceController : MonoBehaviour
                 MovePlateSpawn(x, y, false);
             }
 
-            if (sc.PositionsOnBoard(x + 1, y) && sc.GetPosition(x + 1, y) != null && sc.GetPosition(x + 1, y).GetComponent<PieceController>().player != player) {
+            if (sc.PositionsOnBoard(x + 1, y) && sc.GetPosition(x + 1, y) != null && sc.GetPosition(x + 1, y).GetComponent<PieceController>().player != player && sc.GetPosition(x + 1, y).GetComponent<PieceController>().player != "hazard") {
                 MovePlateSpawn(x + 1, y, true);
             }
 
-            if (sc.PositionsOnBoard(x - 1, y) && sc.GetPosition(x - 1, y) != null && sc.GetPosition(x - 1, y).GetComponent<PieceController>().player != player) {
+            if (sc.PositionsOnBoard(x - 1, y) && sc.GetPosition(x - 1, y) != null && sc.GetPosition(x - 1, y).GetComponent<PieceController>().player != player && sc.GetPosition(x - 1, y).GetComponent<PieceController>().player != "hazard") {
                 MovePlateSpawn(x - 1, y, true);
             }
         }

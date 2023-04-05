@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -10,6 +11,12 @@ public class MainMenuManager : MonoBehaviour
     [Header("Background Color Stuff")]
     public BackgroundColorController backgroundColor;
     public TMP_Dropdown gameColorDropdown;
+    public GameObject optionsMenu;
+    public GameObject mainMenu;
+    public Button startButton;
+    public Button optionsButton;
+    public Button confirmButton;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +26,9 @@ public class MainMenuManager : MonoBehaviour
         gameColorDropdown.onValueChanged.AddListener(delegate {
                 onValueChanged(gameColorDropdown);
             });
+        startButton.onClick.AddListener(startGame);
+        optionsButton.onClick.AddListener(toOptions);
+        confirmButton.onClick.AddListener(toMainMenu);
     }
 
     // Update is called once per frame
@@ -47,5 +57,19 @@ public class MainMenuManager : MonoBehaviour
                 break;
         }
         backgroundColor.SetGameColor();
+    }
+
+    void startGame() {
+        SceneManager.LoadScene("Map");
+    }
+
+    void toOptions() {
+        mainMenu.SetActive(false);
+        optionsMenu.SetActive(true);
+    }
+
+    void toMainMenu() {
+        mainMenu.SetActive(true);
+        optionsMenu.SetActive(false);
     }
 }

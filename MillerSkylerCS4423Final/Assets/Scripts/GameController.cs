@@ -9,38 +9,153 @@ public class GameController : MonoBehaviour
 {
     
     public GameObject Chesspiece;
+    public GameObject mainManager;
 
     public TMP_Text pieceNameText;
     public TMP_Text pieceDescriptionText;
 
     private GameObject[,] positions = new GameObject[8,8];
-    private GameObject[] playerBlack = new GameObject[20];
-    private GameObject[] playerWhite = new GameObject[20];
+    private GameObject[] playerBlack;// = new GameObject[2];
+    private GameObject[] playerWhite;// = new GameObject[2];
 
     private string currentPlayer = "white";
 
     private bool gameOver = false;
+
+    public int[] pieces;
+    string pieceName;
+    int xStart;
+    int yStart;
+    string color;
+    string realName;
     
     // Start is called before the first frame update
     void Start()
     {
-        playerWhite = new GameObject[] {
-            Create("whiteRook", 0, 0), Create("whiteKnight", 1, 0), Create("whiteBishop", 2, 0), Create("whiteQueen", 3, 0), Create("whiteKing", 4, 0), 
-            Create("whiteBishop", 5, 0), Create("whiteKnight", 6, 0), Create("whiteRook", 7, 0), Create("whitePawn", 0, 1), Create("whitePawn", 1, 1),
-            Create("whitePawn", 2, 1), Create("whitePawn", 3, 1), Create("whitePawn", 4, 1), Create("whitePawn", 5, 1), Create("whitePawn", 6, 1),
-            Create("whitePawn", 7, 1), Create("whitePrince", 2, 2)
-        };
-        playerBlack = new GameObject[] {
-            Create("blackRook", 0, 7), Create("blackKnight", 1, 7), Create("blackBishop", 2, 7), Create("blackQueen", 3, 7), Create("blackKing", 4, 7), 
-            Create("blackBishop", 5, 7), Create("blackKnight", 6, 7), Create("blackRook", 7, 7), Create("blackPawn", 0, 6), Create("blackPawn", 1, 6),
-            Create("blackPawn", 2, 6), Create("blackPawn", 3, 6), Create("blackPawn", 4, 6), Create("blackPawn", 5, 6), Create("blackPawn", 6, 6),
-            Create("blackPawn", 7, 6), Create("blackPrince", 5, 5)
-        };
-
+        mainManager = GameObject.FindGameObjectWithTag("MainManager");
+        pieces = mainManager.GetComponent<MainManager>().pieces;
+        int numWhite = mainManager.GetComponent<MainManager>().numWhite;
+        int numBlack = mainManager.GetComponent<MainManager>().numBlack;
+        
+        playerWhite = new GameObject[numWhite];
+        playerBlack = new GameObject[numBlack];
+        
+        int j = 0;
+        int k = 0;
+        GameObject objectWhite;
+        GameObject objectBlack;
+        
+        for (int i = 0; i < pieces.Length; i++) {
+            if (i == 0) {
+                switch (pieces[i]) {
+                    case 0:
+                        pieceName = "King";
+                        break;
+                    case 1:
+                        pieceName = "Pawn";
+                        break;
+                    case 2:
+                        pieceName = "Rook";
+                        break;
+                    case 3:
+                        pieceName = "Bishop";
+                        break;
+                    case 4:
+                        pieceName = "Knight";
+                        break;
+                    case 5:
+                        pieceName = "Queen";
+                        break;
+                    case 6:
+                        pieceName = "Prince";
+                        break;
+                }
+            }
+            if (i == 1) {
+                xStart = pieces[i];
+            } 
+            if (i == 2) {
+                yStart = pieces[i];
+            } 
+            if (i == 3) {
+                if (pieces[i] == 0) {
+                    color = "white";
+                } else if (pieces[i] == 1) {
+                    color = "black";
+                }
+                realName = string.Concat(color, pieceName);
+                if (color == "white") { 
+                    objectWhite = Create(realName, xStart, yStart); 
+                    playerWhite[j] = objectWhite;
+                    j++;
+                } else if (color == "black") {
+                    objectBlack = Create(realName, xStart, yStart); 
+                    playerBlack[k] = objectBlack;
+                    k++;
+                }
+            }
+            if (i != 0 && i != 1 && i != 2 && i != 3) {
+                switch (i % 4) {
+                    case 0:
+                        switch (pieces[i]) {
+                        case 0:
+                            pieceName = "King";
+                            break;
+                        case 1:
+                            pieceName = "Pawn";
+                            break;
+                        case 2:
+                            pieceName = "Rook";
+                            break;
+                        case 3:
+                            pieceName = "Bishop";
+                            break;
+                        case 4:
+                            pieceName = "Knight";
+                            break;
+                        case 5:
+                            pieceName = "Queen";
+                            break;
+                        case 6:
+                            pieceName = "Prince";
+                            break;
+                    }
+                    break;
+                    case 1:
+                        xStart = pieces[i];
+                        break;
+                    case 2:
+                        yStart = pieces[i];
+                        break;
+                    case 3:
+                        if (pieces[i] == 0) {
+                            color = "white";
+                        } else {
+                            color = "black";
+                        }
+                        realName = string.Concat(color, pieceName);
+                        if (color == "white") {
+                            objectWhite = Create(realName, xStart, yStart);
+                            playerWhite[j] = objectWhite;
+                            j++;
+                        } else if (color == "black") {
+                            objectBlack = Create(realName, xStart, yStart); 
+                            playerBlack[k] = objectBlack;
+                            k++;
+                        }
+                        break;
+                    }            
+                }
+        }
+            
         for (int i = 0; i < playerWhite.Length; i++) {
             SetPosition(playerWhite[i]);
+        }
+        for (int i = 0; i < playerBlack.Length; i++) {
             SetPosition(playerBlack[i]);
         }
+        
+
     }
 
     public GameObject Create(string name, int x, int y) {
@@ -100,6 +215,18 @@ public class GameController : MonoBehaviour
     }
 
     public void Winner(string playerWinner) {
+
+        if (playerWinner == "white") {
+            mainManager.GetComponent<MainManager>().numWins += 1;
+            mainManager.GetComponent<MainManager>().money += 50;
+            pieceNameText.text = "You Won!";
+            
+        } else {
+            mainManager.GetComponent<MainManager>().numLoss += 1;
+            mainManager.GetComponent<MainManager>().money += 25;
+            pieceNameText.text = "You Lost!";
+        }
+        pieceDescriptionText.text = "Click anywhere to return to the map.";
         gameOver = true;
     }
 
@@ -109,7 +236,7 @@ public class GameController : MonoBehaviour
         if (gameOver == true && Input.GetMouseButtonDown(0)) {
             gameOver = false;
 
-            SceneManager.LoadScene("SampleScene");
+            SceneManager.LoadScene("Map");
         }
     }
 }

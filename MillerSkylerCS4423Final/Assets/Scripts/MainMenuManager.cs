@@ -16,6 +16,7 @@ public class MainMenuManager : MonoBehaviour
     public Button startButton;
     public Button optionsButton;
     public Button confirmButton;
+    public Button quitButton;
     
     // Start is called before the first frame update
     void Start()
@@ -29,6 +30,7 @@ public class MainMenuManager : MonoBehaviour
         startButton.onClick.AddListener(startGame);
         optionsButton.onClick.AddListener(toOptions);
         confirmButton.onClick.AddListener(toMainMenu);
+        quitButton.onClick.AddListener(Quit);
     }
 
     // Update is called once per frame
@@ -71,5 +73,9 @@ public class MainMenuManager : MonoBehaviour
     void toMainMenu() {
         mainMenu.SetActive(true);
         optionsMenu.SetActive(false);
+    }
+
+    void Quit() {
+        Application.Quit();
     }
 }

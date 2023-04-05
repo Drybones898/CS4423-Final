@@ -4,15 +4,29 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
     
     public GameObject Chesspiece;
     public GameObject mainManager;
-
+    
+    [Header("Text")]
     public TMP_Text pieceNameText;
     public TMP_Text pieceDescriptionText;
+
+    [Header("Pause Menu UI")]
+    public BoardColorController boardColor;
+    public BackgroundColorController backgroundColor;
+    public TMP_Dropdown gameColorDropdown;
+    public GameObject optionsMenu;
+    public GameObject pauseMenu;
+    public Button mapButton;
+    public Button optionsButton;
+    public Button resumeButton;
+    public Button confirmButton;
+    public Button quitButton;
 
     private GameObject[,] positions = new GameObject[8,8];
     private GameObject[] playerBlack;// = new GameObject[2];
@@ -22,12 +36,14 @@ public class GameController : MonoBehaviour
 
     private bool gameOver = false;
 
+    [Header("Misc")]
     public int[] pieces;
     string pieceName;
     int xStart;
     int yStart;
     string color;
     string realName;
+    bool pauseActive = false;
     
     // Start is called before the first frame update
     void Start()
@@ -36,6 +52,15 @@ public class GameController : MonoBehaviour
         pieces = mainManager.GetComponent<MainManager>().pieces;
         int numWhite = mainManager.GetComponent<MainManager>().numWhite;
         int numBlack = mainManager.GetComponent<MainManager>().numBlack;
+
+        gameColorDropdown.onValueChanged.AddListener(delegate {
+                onValueChanged(gameColorDropdown);
+            });
+        resumeButton.onClick.AddListener(resumeGame);
+        optionsButton.onClick.AddListener(toOptions);
+        confirmButton.onClick.AddListener(toPauseMenu);
+        mapButton.onClick.AddListener(toMap);
+        quitButton.onClick.AddListener(Quit);
         
         playerWhite = new GameObject[numWhite];
         playerBlack = new GameObject[numBlack];
@@ -230,9 +255,67 @@ public class GameController : MonoBehaviour
         gameOver = true;
     }
 
+    void toMap() {
+        SceneManager.LoadScene("Map");
+    }
+
+    void toPauseMenu() {
+        pauseMenu.SetActive(true);
+        optionsMenu.SetActive(false);
+    }
+
+    void toOptions() {
+        optionsMenu.SetActive(true);
+        pauseMenu.SetActive(false);
+    }
+
+    void resumeGame() {
+        pauseMenu.SetActive(false);
+        optionsMenu.SetActive(false);
+    }
+
+    public void onValueChanged(TMP_Dropdown change) {
+        switch (change.value) {
+            case 0:
+                mainManager.GetComponent<MainManager>().gameColor = "blue";
+                //background.GetComponent<SpriteRenderer>().color = new Color32(29, 0, 0, 255);
+                break;
+            case 1:
+                mainManager.GetComponent<MainManager>().gameColor = "red";
+                //background.GetComponent<SpriteRenderer>().color = new Color32(0, 13, 29, 255);
+                break;
+            case 2:
+                mainManager.GetComponent<MainManager>().gameColor = "green";
+                //background.GetComponent<SpriteRenderer>().color = new Color32(0, 29, 0, 255);
+                break;
+            case 3:
+                mainManager.GetComponent<MainManager>().gameColor = "yellow";
+                //background.GetComponent<SpriteRenderer>().color = new Color32(29, 29, 0, 255);
+                break;
+        }
+        backgroundColor.SetGameColor();
+        boardColor.SetGameColor();
+    }
+
+    void Quit() {
+        Application.Quit();
+    }
+
     // Update is called once per frame
     void Update()
     {
+        
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (pauseActive) {
+                resumeGame();
+                pauseActive = !pauseActive;
+            } else {
+                toPauseMenu();
+                pauseActive = !pauseActive;
+            }
+        }
+
         if (gameOver == true && Input.GetMouseButtonDown(0)) {
             gameOver = false;
 

@@ -14,6 +14,10 @@ public class BoardColorController : MonoBehaviour
     void Start()
     {
         mainManager = GameObject.FindGameObjectWithTag("MainManager");
+        SetGameColor();
+    }
+
+    public void SetGameColor() {
         gameColor = mainManager.GetComponent<MainManager>().gameColor;
         
         switch (gameColor) {

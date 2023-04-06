@@ -50,30 +50,30 @@ public class MovePlate : MonoBehaviour
 
     public void Move(GameObject gc, int x, int y) {
         //gameController = GameObject.FindGameObjectWithTag("GameController");
-        GameController gameController = gc.GetComponent<GameController>();
+        GameController simGameController = gc.GetComponent<GameController>();
         //if (gameController.GetComponent<GameController>().GetCurrentPlayer() == "white") {
         if (attack) {
-            GameObject cp = gameController.GetComponent<GameController>().GetPosition(matrixX, matrixY);
+            GameObject cp = simGameController.GetComponent<GameController>().GetPosition(x, y);
 
             if (cp.name == "whiteKing") {
-                gameController.GetComponent<GameController>().Winner("black");
+                simGameController.GetComponent<GameController>().Winner("black");
             } else if (cp.name == "blackKing") {
-                gameController.GetComponent<GameController>().Winner("white");
+                simGameController.GetComponent<GameController>().Winner("white");
             }
             // doing the lords work with this next line of code
             Destroy(cp);
         }
 
-        gameController.GetComponent<GameController>().SetPositionEmpty(reference.GetComponent<PieceController>().GetXBoard(), reference.GetComponent<PieceController>().GetYBoard());
+        simGameController.GetComponent<GameController>().SetPositionEmpty(reference.GetComponent<PieceController>().GetXBoard(), reference.GetComponent<PieceController>().GetYBoard());
 
         reference.GetComponent<PieceController>().SetXBoard(x);
         reference.GetComponent<PieceController>().SetYBoard(y);
         reference.GetComponent<PieceController>().SetCoords();
 
-        gameController.GetComponent<GameController>().SetPosition(reference);
+        simGameController.GetComponent<GameController>().SetPosition(reference);
 
         reference.GetComponent<PieceController>().DestroyPlates();
-        gameController.GetComponent<GameController>().NextTurn();
+        simGameController.GetComponent<GameController>().NextTurn();
     }
     //}
 

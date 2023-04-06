@@ -77,7 +77,7 @@ public class MiniMaxAI : MonoBehaviour
         int bestEval = int.MinValue;
         Vector2Int bestMove = Vector2Int.zero;
         GameObject chessPiece = board[0,0];
-
+        /*
         if (board != null) {
             Debug.Log("We have a board");
             for (int i = 0; i < 8; i++)
@@ -93,7 +93,7 @@ public class MiniMaxAI : MonoBehaviour
         } else {
             Debug.Log("We don't have a board");
         }
-
+        */
         foreach (GameObject piece in GetPieces(board, "white"))
         {
             List<Vector2Int> moves = GetPossibleMoves(piece, board);
@@ -132,7 +132,7 @@ public class MiniMaxAI : MonoBehaviour
             }
             Debug.Log(board[7,7]);
         
-        board = MakeRealMove(chessPiece, bestMove, board);
+        //board = MakeRealMove(chessPiece, bestMove, board);
 
         return bestMove;
     }
@@ -301,7 +301,7 @@ private List<Vector2Int> GetPossibleMoves(GameObject piece, GameObject[,] board)
     {
         // Make a copy of the current board with the given move applied
         PieceController chessPiece = piece.GetComponent<PieceController>();
-        GameObject simulatedGameController = Instantiate(gameController);
+        GameObject simulatedGameController = gameController;//Instantiate(gameController);
         GameController simGC = simulatedGameController.GetComponent<GameController>();
 
         

@@ -7,7 +7,6 @@ public class MainManager : MonoBehaviour
 
     public static MainManager instance;
     public int[] pieces;
-    public string gameColor;
     public int numWhite;
     public int numBlack;
     public int numHazard;

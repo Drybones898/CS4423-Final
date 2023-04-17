@@ -4,30 +4,27 @@ using UnityEngine;
 
 public class BackgroundColorController : MonoBehaviour
 {
-    GameObject mainManager;
     public GameObject background;
     string gameColor;
     // Start is called before the first frame update
     void Start()
-    {
-        mainManager = GameObject.FindGameObjectWithTag("MainManager");
-        
+    { 
         SetGameColor();
     }
 
     public void SetGameColor() {
-        gameColor = mainManager.GetComponent<MainManager>().gameColor;
+        gameColor = PlayerPrefs.GetString("color");
         switch (gameColor) {
-            case "red":
+            case "Red":
                 background.GetComponent<SpriteRenderer>().color = new Color32(29, 0, 0, 255);
                 break;
-            case "blue":
+            case "Blue":
                 background.GetComponent<SpriteRenderer>().color = new Color32(0, 13, 29, 255);
                 break;
-            case "green":
+            case "Green":
                 background.GetComponent<SpriteRenderer>().color = new Color32(0, 29, 0, 255);
                 break;
-            case "yellow":
+            case "Yellow":
                 background.GetComponent<SpriteRenderer>().color = new Color32(29, 29, 0, 255);
                 break;
             default:

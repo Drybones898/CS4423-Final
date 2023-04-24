@@ -42,7 +42,7 @@ public class MovePlate : MonoBehaviour
         reference.GetComponent<PieceController>().SetCoords();
 
         gameController.GetComponent<GameController>().SetPosition(reference);
-
+        
         gameController.GetComponent<GameController>().NextTurn();
 
         reference.GetComponent<PieceController>().DestroyPlates();

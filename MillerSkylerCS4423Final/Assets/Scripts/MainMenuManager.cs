@@ -82,15 +82,18 @@ public class MainMenuManager : MonoBehaviour
     }
 
     void startGame() {
+        PlayClickSound();
         SceneManager.LoadScene("Map");
     }
 
     void toOptions() {
+        PlayClickSound();
         mainMenu.SetActive(false);
         optionsMenu.SetActive(true);
     }
 
     void toMainMenu() {
+        PlayClickSound();
         mainMenu.SetActive(true);
         optionsMenu.SetActive(false);
     }
@@ -99,12 +102,16 @@ public class MainMenuManager : MonoBehaviour
         Application.Quit();
     }
 
-    public void SetResolution(){
+    public void SetResolution() {
         Screen.SetResolution(resolutions[resolutionDropdown.value].width,resolutions[resolutionDropdown.value].height,Screen.fullScreen);
         PlayerPrefs.SetInt("resolution",resolutionDropdown.value);
     }
 
-    public void SetFullScreen(){
+    public void SetFullScreen() {
         Screen.fullScreen = fullscreenToggle.isOn;
+    }
+
+    public void PlayClickSound() {
+        GetComponent<AudioSource>().Play();
     }
 }

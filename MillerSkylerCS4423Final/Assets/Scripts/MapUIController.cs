@@ -89,16 +89,19 @@ public class MapUIController : MonoBehaviour
     }
 
     void toPauseMenu() {
+        PlayClickSound();
         pauseMenu.SetActive(true);
         optionsMenu.SetActive(false);
     }
 
     void toOptions() {
+        PlayClickSound();
         optionsMenu.SetActive(true);
         pauseMenu.SetActive(false);
     }
 
     void resumeGame() {
+        PlayClickSound();
         pauseMenu.SetActive(false);
         optionsMenu.SetActive(false);
         pauseActive = !pauseActive;
@@ -131,6 +134,7 @@ public class MapUIController : MonoBehaviour
     }
 
     void Sabotage() {
+        PlayClickSound();
         if (mainManager.GetComponent<MainManager>().money >= 100) {
             mainManager.GetComponent<MainManager>().money -= 100;
             moneyText.text = "Money: " + mainManager.GetComponent<MainManager>().money;
@@ -139,10 +143,15 @@ public class MapUIController : MonoBehaviour
     }
 
     void Support() {
+        PlayClickSound();
         if (mainManager.GetComponent<MainManager>().money >= 100) {
             mainManager.GetComponent<MainManager>().money -= 100;
             moneyText.text = "Money: " + mainManager.GetComponent<MainManager>().money;
             mainManager.GetComponent<MainManager>().support = true;
         }
+    }
+
+    public void PlayClickSound() {
+        GetComponent<AudioSource>().Play();
     }
 }

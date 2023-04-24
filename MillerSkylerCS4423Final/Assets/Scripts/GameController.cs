@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
     [Header("Text")]
     public TMP_Text pieceNameText;
     public TMP_Text pieceDescriptionText;
+    public TMP_Text numMovesText;
 
     [Header("Pause Menu UI")]
     public BoardColorController boardColor;
@@ -47,6 +48,7 @@ public class GameController : MonoBehaviour
     string color;
     string realName;
     public bool pauseActive = false;
+    int numMoves = 0;
     
     // Start is called before the first frame update
     void Start()
@@ -292,11 +294,15 @@ public class GameController : MonoBehaviour
     }
 
     public void NextTurn() {
+        /*
         if (currentPlayer == "white") {
             currentPlayer = "black";
         } else {
             currentPlayer = "white";
         }
+        */
+        numMoves = numMoves + 1;
+        numMovesText.text = ("Number of Moves Made: " + numMoves.ToString());
     }
 
     public void Winner(string playerWinner) {
@@ -320,16 +326,19 @@ public class GameController : MonoBehaviour
     }
 
     void toPauseMenu() {
+        PlayClickSound();
         pauseMenu.SetActive(true);
         optionsMenu.SetActive(false);
     }
 
     void toOptions() {
+        PlayClickSound();
         optionsMenu.SetActive(true);
         pauseMenu.SetActive(false);
     }
 
     void resumeGame() {
+        PlayClickSound();
         pauseMenu.SetActive(false);
         optionsMenu.SetActive(false);
         pauseActive = !pauseActive;
@@ -361,6 +370,10 @@ public class GameController : MonoBehaviour
     public void onResolutionChanged(TMP_Dropdown change) {
         Screen.SetResolution(resolutions[resolutionDropdown.value].width,resolutions[resolutionDropdown.value].height,Screen.fullScreen);
         PlayerPrefs.SetInt("resolution",resolutionDropdown.value);
+    }
+
+    public void PlayClickSound() {
+        GetComponent<AudioSource>().Play();
     }
 
     // Update is called once per frame

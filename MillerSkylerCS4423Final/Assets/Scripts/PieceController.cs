@@ -71,6 +71,7 @@ public class PieceController : MonoBehaviour
 
     private void OnMouseUp() {
         
+        PlaySelectSound();
         if (!gameController.GetComponent<GameController>().IsGameOver() && gameController.GetComponent<GameController>().GetCurrentPlayer() == player && gameController.GetComponent<GameController>().pauseActive == false) {
             DestroyPlates();
 
@@ -82,7 +83,7 @@ public class PieceController : MonoBehaviour
             DestroyPlates();
 
             SetPieceText();
-            InitiateSelectedPlate(xBoard, yBoard);
+            //InitiateSelectedPlate(xBoard, yBoard);
         }
         
     }
@@ -130,9 +131,12 @@ public class PieceController : MonoBehaviour
                 gameController.GetComponent<GameController>().SetPieceDescriptionText("A bishop can move diagonally as many squares as it likes, as long as it is not blocked by its own pieces or an occupied square.");
                 break;
             case "whiteKing":
-            case "blackKing":
                 gameController.GetComponent<GameController>().SetPieceNameText("King");
                 gameController.GetComponent<GameController>().SetPieceDescriptionText("The king can only move and capture in one square in any direction.");
+                break;
+            case "blackKing":
+                gameController.GetComponent<GameController>().SetPieceNameText("Black King");
+                gameController.GetComponent<GameController>().SetPieceDescriptionText("The enemy king is immobile, you must act quickly to capture him before he can escape to his army!");
                 break;
             case "whiteRook":
             case "blackRook":
@@ -357,5 +361,9 @@ public class PieceController : MonoBehaviour
         }
         MovePlateScript.SetReference(gameObject);
         MovePlateScript.SetCoords(matrixX, matrixY);
+    }
+
+    public void PlaySelectSound() {
+        GetComponent<AudioSource>().Play();
     }
 }

@@ -8,6 +8,9 @@ public class PieceController : MonoBehaviour
     public GameObject gameController;
     public GameObject movePlate;
     public GameObject selectedPlate;
+    public Material selected;
+    public Material notSelected;
+    public GameObject[] pieces;
 
     private int xBoard = -1;
     private int yBoard = -1;
@@ -72,6 +75,11 @@ public class PieceController : MonoBehaviour
     private void OnMouseUp() {
         
         PlaySelectSound();
+        pieces = GameObject.FindGameObjectsWithTag("Piece");
+        foreach (GameObject piece in pieces) {
+            piece.GetComponent<SpriteRenderer>().material = notSelected;
+        }
+        this.GetComponent<SpriteRenderer>().material = selected;
         if (!gameController.GetComponent<GameController>().IsGameOver() && gameController.GetComponent<GameController>().GetCurrentPlayer() == player && gameController.GetComponent<GameController>().pauseActive == false) {
             DestroyPlates();
 
@@ -83,7 +91,7 @@ public class PieceController : MonoBehaviour
             DestroyPlates();
 
             SetPieceText();
-            //InitiateSelectedPlate(xBoard, yBoard);
+            InitiateSelectedPlate(xBoard, yBoard);
         }
         
     }
@@ -109,7 +117,6 @@ public class PieceController : MonoBehaviour
         GameObject MovePlate = Instantiate(selectedPlate, new Vector2(x, y), Quaternion.identity);
 
         MovePlate MovePlateScript = MovePlate.GetComponent<MovePlate>();
-        MovePlateScript.SetReference(gameObject);
         MovePlateScript.SetCoords(matrixX, matrixY);
     }
 

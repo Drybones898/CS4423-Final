@@ -40,9 +40,10 @@ public class MovePlate : MonoBehaviour
         reference.GetComponent<PieceController>().SetXBoard(matrixX);
         reference.GetComponent<PieceController>().SetYBoard(matrixY);
         reference.GetComponent<PieceController>().SetCoords();
+        reference.GetComponent<SpriteRenderer>().material = reference.GetComponent<PieceController>().notSelected;
 
         gameController.GetComponent<GameController>().SetPosition(reference);
-        
+
         gameController.GetComponent<GameController>().NextTurn();
 
         reference.GetComponent<PieceController>().DestroyPlates();

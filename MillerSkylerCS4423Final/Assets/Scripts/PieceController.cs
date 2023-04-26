@@ -17,7 +17,7 @@ public class PieceController : MonoBehaviour
 
     private string player;
 
-    public Sprite blackQueen, blackKnight, blackBishop, blackKing, blackRook, blackPawn, blackPrince;
+    public Sprite blackQueen, blackKnight, blackBishop, blackKing, blackRook, blackPawn, blackPrince, blackWall;
     public Sprite whiteQueen, whiteKnight, whiteBishop, whiteKing, whiteRook, whitePawn, whitePrince;
     public Sprite hazardhole1, hazardhole2;
 
@@ -43,6 +43,7 @@ public class PieceController : MonoBehaviour
             case "whitePrince": this.GetComponent<SpriteRenderer>().sprite = whitePrince; player = "white"; break;
             case "hazardhole1": this.GetComponent<SpriteRenderer>().sprite = hazardhole1; player = "hazard"; break;
             case "hazardhole2": this.GetComponent<SpriteRenderer>().sprite = hazardhole2; player = "hazard"; break;
+            case "blackWall": this.GetComponent<SpriteRenderer>().sprite = blackWall; player = "black"; break;
         }
     }
 
@@ -164,6 +165,10 @@ public class PieceController : MonoBehaviour
             case "hazardhole2":
                 gameController.GetComponent<GameController>().SetPieceNameText("Hole");
                 gameController.GetComponent<GameController>().SetPieceDescriptionText("This is a hole. You cannot move pieces here.");
+                break;
+            case "blackWall":
+                gameController.GetComponent<GameController>().SetPieceNameText("Wall");
+                gameController.GetComponent<GameController>().SetPieceDescriptionText("This is a wall. It is immoblie and you are able to capture it.");
                 break;
         }
     }

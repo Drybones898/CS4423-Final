@@ -49,12 +49,14 @@ public class GameController : MonoBehaviour
     string realName;
     public bool pauseActive = false;
     int numMoves = 0;
+    int parMoves = 0;
     
     // Start is called before the first frame update
     void Start()
     {
         mainManager = GameObject.FindGameObjectWithTag("MainManager");
         pieces = mainManager.GetComponent<MainManager>().pieces;
+        parMoves = mainManager.GetComponent<MainManager>().parMoves;
         int numWhite = mainManager.GetComponent<MainManager>().numWhite;
         int numBlack = mainManager.GetComponent<MainManager>().numBlack;
         int numHazard = mainManager.GetComponent<MainManager>().numHazard;
@@ -135,6 +137,9 @@ public class GameController : MonoBehaviour
                     case 8:
                         pieceName = "hole2";
                         break;
+                    case 9:
+                        pieceName = "Wall";
+                        break;
                 }
             }
             if (i == 1) {
@@ -197,6 +202,9 @@ public class GameController : MonoBehaviour
                         case 8:
                             pieceName = "hole2";
                             break;
+                        case 9:
+                            pieceName = "Wall";
+                            break;
                     }
                     break;
                     case 1:
@@ -242,7 +250,7 @@ public class GameController : MonoBehaviour
             SetPosition(boardHazard[i]);
         }
         
-
+        numMovesText.text = ("Number of Moves Made: 0/" + parMoves.ToString());
     }
 
     public GameObject Create(string name, int x, int y) {
@@ -302,12 +310,12 @@ public class GameController : MonoBehaviour
         }
         */
         numMoves = numMoves + 1;
-        numMovesText.text = ("Number of Moves Made: " + numMoves.ToString());
+        numMovesText.text = ("Number of Moves Made: " + numMoves.ToString() + "/" + parMoves.ToString());
     }
 
     public void Winner(string playerWinner) {
 
-        if (playerWinner == "white") {
+        if (numMoves <= parMoves) {
             mainManager.GetComponent<MainManager>().numWins += 1;
             mainManager.GetComponent<MainManager>().money += 50;
             pieceNameText.text = "You Won!";

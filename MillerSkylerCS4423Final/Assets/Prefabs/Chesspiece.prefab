@@ -112,6 +112,7 @@ MonoBehaviour:
   blackRook: {fileID: 21300000, guid: 653bcd8a4e6a8234299b03755d97d04a, type: 3}
   blackPawn: {fileID: 21300000, guid: cbd572a2dbced2340b757d6c47e4b545, type: 3}
   blackPrince: {fileID: 21300000, guid: 5043a383a1980274abc378a11fa09f33, type: 3}
+  blackWall: {fileID: 21300000, guid: 9800d18c72dfe6f49866d8c79992fc4f, type: 3}
   whiteQueen: {fileID: 21300000, guid: 29755128b9495db4cb54249c9d97d77b, type: 3}
   whiteKnight: {fileID: 21300000, guid: d3b18ea15125cef4ba3789aa084a99fe, type: 3}
   whiteBishop: {fileID: 21300000, guid: 41c0a9c28a0c3ed42bca7dfc36417f96, type: 3}

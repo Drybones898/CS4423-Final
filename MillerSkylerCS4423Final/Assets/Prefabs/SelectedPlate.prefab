@@ -74,7 +74,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: 7482667652216324306, guid: 28df9be314ff27e408ed5d6d89acd311, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
@@ -99,6 +99,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameController: {fileID: 0}
+  camera: {fileID: 0}
+  particle: {fileID: 5440095849508434645, guid: 11dfdc482cddfe04b93428b770bb4314, type: 3}
   attack: 0
 --- !u!61 &3354103685077178751
 BoxCollider2D:

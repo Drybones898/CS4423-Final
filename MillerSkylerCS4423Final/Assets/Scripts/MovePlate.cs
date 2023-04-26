@@ -11,6 +11,9 @@ public class MovePlate : MonoBehaviour
     int matrixX;
     int matrixY;
 
+    public GameObject camera;
+    public GameObject particle;
+
     public bool attack = false;
 
     public void Start() {
@@ -25,7 +28,11 @@ public class MovePlate : MonoBehaviour
 
         if (attack) {
             GameObject cp = gameController.GetComponent<GameController>().GetPosition(matrixX, matrixY);
-
+            camera = GameObject.Find("Main Camera");
+            camera.GetComponent<CamShake>().TriggerShake();
+            particle = GameObject.Find("DestroyedPiece");
+            particle.GetComponent<Transform>().position = new Vector3(matrixX - 7.5f, matrixY - 4f, 0);
+            particle.GetComponent<ParticleSystem>().Play();
             if (cp.name == "whiteKing") {
                 gameController.GetComponent<GameController>().Winner("black");
             } else if (cp.name == "blackKing") {

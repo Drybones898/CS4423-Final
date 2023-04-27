@@ -75,25 +75,28 @@ public class PieceController : MonoBehaviour
 
     private void OnMouseUp() {
         
-        PlaySelectSound();
-        pieces = GameObject.FindGameObjectsWithTag("Piece");
-        foreach (GameObject piece in pieces) {
-            piece.GetComponent<SpriteRenderer>().material = notSelected;
-        }
-        this.GetComponent<SpriteRenderer>().material = selected;
-        if (!gameController.GetComponent<GameController>().IsGameOver() && gameController.GetComponent<GameController>().GetCurrentPlayer() == player && gameController.GetComponent<GameController>().pauseActive == false) {
-            DestroyPlates();
+        if (!gameController.GetComponent<GameController>().pauseActive) {
+            PlaySelectSound();
+            pieces = GameObject.FindGameObjectsWithTag("Piece");
+            foreach (GameObject piece in pieces) {
+                piece.GetComponent<SpriteRenderer>().material = notSelected;
+            }
+            this.GetComponent<SpriteRenderer>().material = selected;
+            if (!gameController.GetComponent<GameController>().IsGameOver() && gameController.GetComponent<GameController>().GetCurrentPlayer() == player && gameController.GetComponent<GameController>().pauseActive == false) {
+                DestroyPlates();
 
-            SetPieceText();
-            InitiateMovePlates();
-            InitiateSelectedPlate(xBoard, yBoard);
-        }
-        if (!gameController.GetComponent<GameController>().IsGameOver() && gameController.GetComponent<GameController>().GetCurrentPlayer() != player && gameController.GetComponent<GameController>().pauseActive == false) {
-            DestroyPlates();
+                SetPieceText();
+                InitiateMovePlates();
+                InitiateSelectedPlate(xBoard, yBoard);
+            }
+            if (!gameController.GetComponent<GameController>().IsGameOver() && gameController.GetComponent<GameController>().GetCurrentPlayer() != player && gameController.GetComponent<GameController>().pauseActive == false) {
+                DestroyPlates();
 
-            SetPieceText();
-            InitiateSelectedPlate(xBoard, yBoard);
+                SetPieceText();
+                InitiateSelectedPlate(xBoard, yBoard);
+            }
         }
+        
         
     }
 

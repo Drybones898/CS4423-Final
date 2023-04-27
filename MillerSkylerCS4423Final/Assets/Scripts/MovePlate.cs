@@ -25,7 +25,6 @@ public class MovePlate : MonoBehaviour
 
     public void OnMouseUp() {
         gameController = GameObject.FindGameObjectWithTag("GameController");
-
         if (attack) {
             GameObject cp = gameController.GetComponent<GameController>().GetPosition(matrixX, matrixY);
             camera = GameObject.Find("Main Camera");

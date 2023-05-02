@@ -19,7 +19,7 @@ public class PieceController : MonoBehaviour
 
     public Sprite blackQueen, blackKnight, blackBishop, blackKing, blackRook, blackPawn, blackPrince, blackWall;
     public Sprite whiteQueen, whiteKnight, whiteBishop, whiteKing, whiteRook, whitePawn, whitePrince;
-    public Sprite hazardhole1, hazardhole2;
+    public Sprite hazardhole1, hazardhole2, hazardriver1, hazardriver2, hazardriver3;
 
     public void Activate() {
         gameController = GameObject.FindGameObjectWithTag("GameController");
@@ -44,6 +44,9 @@ public class PieceController : MonoBehaviour
             case "hazardhole1": this.GetComponent<SpriteRenderer>().sprite = hazardhole1; player = "hazard"; break;
             case "hazardhole2": this.GetComponent<SpriteRenderer>().sprite = hazardhole2; player = "hazard"; break;
             case "blackWall": this.GetComponent<SpriteRenderer>().sprite = blackWall; player = "black"; break;
+            case "hazardriver1": this.GetComponent<SpriteRenderer>().sprite = hazardriver1; player = "hazard"; break;
+            case "hazardriver2": this.GetComponent<SpriteRenderer>().sprite = hazardriver2; player = "hazard"; break;
+            case "hazardriver3": this.GetComponent<SpriteRenderer>().sprite = hazardriver3; player = "hazard"; break;
         }
     }
 
@@ -168,6 +171,12 @@ public class PieceController : MonoBehaviour
             case "hazardhole2":
                 gameController.GetComponent<GameController>().SetPieceNameText("Hole");
                 gameController.GetComponent<GameController>().SetPieceDescriptionText("This is a hole. You cannot move pieces here.");
+                break;
+            case "hazardriver1":
+            case "hazardriver2":
+            case "hazardriver3":
+                gameController.GetComponent<GameController>().SetPieceNameText("River");
+                gameController.GetComponent<GameController>().SetPieceDescriptionText("This is a river. You cannot move pieces here.");
                 break;
             case "blackWall":
                 gameController.GetComponent<GameController>().SetPieceNameText("Wall");

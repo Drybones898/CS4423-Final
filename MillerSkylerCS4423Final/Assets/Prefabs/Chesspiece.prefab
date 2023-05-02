@@ -122,6 +122,9 @@ MonoBehaviour:
   whitePrince: {fileID: 21300000, guid: e4099abc916b56746837be37ba381f57, type: 3}
   hazardhole1: {fileID: 21300000, guid: c4bd65b057eb993439e8ff407650b1f4, type: 3}
   hazardhole2: {fileID: 21300000, guid: 907964df9f78ff842b9d29bc1306b3ee, type: 3}
+  hazardriver1: {fileID: 21300000, guid: 8f4681183e277f6489b95b4919aecc92, type: 3}
+  hazardriver2: {fileID: 21300000, guid: 21a6d932fd12cd648a9df88adbd83779, type: 3}
+  hazardriver3: {fileID: 21300000, guid: f47cc939357ae5342a6ed5a9886a0b10, type: 3}
 --- !u!61 &1503944196763324480
 BoxCollider2D:
   m_ObjectHideFlags: 0

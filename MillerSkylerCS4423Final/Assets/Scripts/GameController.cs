@@ -140,6 +140,15 @@ public class GameController : MonoBehaviour
                     case 9:
                         pieceName = "Wall";
                         break;
+                    case 10:
+                        pieceName = "river1";
+                        break;
+                    case 11:
+                        pieceName = "river2";
+                        break;
+                    case 12:
+                        pieceName = "river3";
+                        break;
                 }
             }
             if (i == 1) {
@@ -204,6 +213,15 @@ public class GameController : MonoBehaviour
                             break;
                         case 9:
                             pieceName = "Wall";
+                            break;
+                        case 10:
+                            pieceName = "river1";
+                            break;
+                        case 11:
+                            pieceName = "river2";
+                            break;
+                        case 12:
+                            pieceName = "river3";
                             break;
                     }
                     break;
@@ -302,27 +320,18 @@ public class GameController : MonoBehaviour
     }
 
     public void NextTurn() {
-        /*
-        if (currentPlayer == "white") {
-            currentPlayer = "black";
-        } else {
-            currentPlayer = "white";
-        }
-        */
         numMoves = numMoves + 1;
         numMovesText.text = ("Number of Moves Made: " + numMoves.ToString() + "/" + parMoves.ToString());
     }
 
     public void Winner(string playerWinner) {
 
-        if (numMoves <= parMoves) {
+        if (numMoves < parMoves) {
             mainManager.GetComponent<MainManager>().numWins += 1;
-            mainManager.GetComponent<MainManager>().money += 50;
             pieceNameText.text = "You Won!";
             
         } else {
             mainManager.GetComponent<MainManager>().numLoss += 1;
-            mainManager.GetComponent<MainManager>().money += 25;
             pieceNameText.text = "You Lost!";
         }
         pieceDescriptionText.text = "Click anywhere to return to the map.";

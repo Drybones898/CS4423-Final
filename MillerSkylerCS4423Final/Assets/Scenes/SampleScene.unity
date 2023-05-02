@@ -2202,8 +2202,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: The enemy king is immobile, you must act quickly to capture him before
+  m_text: 'The enemy king is immobile, you must act quickly to capture him before
     he can escape to his army!
+
+
+
+    TIP: You can leave the level at anytime by
+    pressing escape and pressing "Back to Map."'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 67c6a5e78350d9443836f690ab0065a8, type: 2}
   m_sharedMaterial: {fileID: 2340297284262980625, guid: 67c6a5e78350d9443836f690ab0065a8, type: 2}

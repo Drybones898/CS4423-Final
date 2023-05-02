@@ -8,7 +8,6 @@ public class MapUIController : MonoBehaviour
 {
     public TMP_Text winsText;
     public TMP_Text lossesText;
-    public TMP_Text moneyText;
     public GameObject mainManager;
     public BackgroundColorController backgroundColor;
 
@@ -20,6 +19,9 @@ public class MapUIController : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject battle2;
     public GameObject battle3;
+    public GameObject battle4;
+    public GameObject battle41;
+    public GameObject battle5;
     public Button optionsButton;
     public Button resumeButton;
     public Button confirmButton;
@@ -34,9 +36,19 @@ public class MapUIController : MonoBehaviour
         mainManager = GameObject.FindGameObjectWithTag("MainManager");
         winsText.text += mainManager.GetComponent<MainManager>().numWins;
         lossesText.text += mainManager.GetComponent<MainManager>().numLoss;
-        moneyText.text += mainManager.GetComponent<MainManager>().money;
 
-        if (mainManager.GetComponent<MainManager>().numWins >= 2) {
+        if (mainManager.GetComponent<MainManager>().numWins >= 4) {
+            battle5.SetActive(true);
+            battle4.SetActive(true);
+            battle41.SetActive(true);
+            battle3.SetActive(true);
+            battle2.SetActive(true);
+        } else if (mainManager.GetComponent<MainManager>().numWins >= 3) {
+            battle4.SetActive(true);
+            battle41.SetActive(true);
+            battle3.SetActive(true);
+            battle2.SetActive(true);
+        } else if (mainManager.GetComponent<MainManager>().numWins >= 2) {
             battle3.SetActive(true);
             battle2.SetActive(true);
         } else if (mainManager.GetComponent<MainManager>().numWins >= 1) {
